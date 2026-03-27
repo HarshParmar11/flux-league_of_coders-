@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmLink Seller Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --primary-green: #16a34a;
+    --header-bg: #14532d;
+    --bg-main: #f6f8fa;
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: #333; }
+
+/* HEADER & NAVIGATION */
+.main-header { 
+    height: 75px; background: var(--header-bg); color: white; padding: 0 30px; 
+    display: flex; justify-content: space-between; align-items: center; 
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; box-sizing: border-box; 
+}
+.header-left { display: flex; align-items: center; gap: 40px; }
+.nav-links { display: flex; gap: 10px; }
+.nav-links a { 
+    padding: 10px 20px; border-radius: 25px; color: #d1fae5; 
+    text-decoration: none; cursor: pointer; font-size: 14px; transition: 0.3s; 
+}
+.active-link { background: var(--primary-green) !important; color: white !important; font-weight: 600; }
+
+.profile-pill { 
+    display: flex; align-items: center; gap: 12px; 
+    background: rgba(255,255,255,0.1); padding: 6px 15px 6px 6px; 
+    border-radius: 40px; border: 1px solid rgba(255,255,255,0.2);
+}
+.avatar { width: 35px; height: 35px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+/* DASHBOARD STAT CARDS */
+.stat-cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
+.stat-card { border-radius: 16px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--card-shadow); }
+.stat-card h3 { font-size: 13px; margin: 0; opacity: 0.8; text-transform: uppercase; }
+.stat-card h2 { font-size: 32px; margin: 5px 0 0; font-weight: 700; }
+
+/* MAIN CONTENT */
+.main { margin-top: 100px; padding: 30px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.card { background: white; padding: 20px; border-radius: 16px; box-shadow: var(--card-shadow); border: 1px solid #eee; margin-bottom: 25px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.btn-primary { background: var(--primary-green); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-danger { background: #fee2e2; color: #b91c1c; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: 600; }
+
+/* PRICE CONTROLS */
+.price-ctrl { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0; }
+.price-ctrl button { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 10px; cursor: pointer; font-weight: bold; }
+
+/* STATUS BADGES */
+.status-badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
+.status-processing { background: #fef3c7; color: #92400e; }
+.status-delivered { background: #dcfce7; color: #166534; cursor: default; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-left">
+        <h1 style="font-size: 22px; margin:0;">🌾 FarmLink</h1>
+        <nav class="nav-links">
+            <a class="active-link" onclick="showSection('dashboard', this)">Dashboard</a>
+            <a onclick="showSection('products', this)">Products</a>
+            <a onclick="showSection('negotiation', this)">Negotiation</a>
+            <a onclick="showSection('customers', this)">Customers</a>
+            <a onclick="showSection('support', this)">Support</a>
+        </nav>
+    </div>
+    <div class="profile-pill">
+        <div class="avatar">SR</div>
+        <div style="font-size: 13px;"><b>Sharma Farms</b></div>
+    </div>
+</header>
+
+<div class="main">
+    
+    <div id="dashboard" class="section active">
+        <div class="stat-cards-row">
+            <div class="stat-card" style="background: #0f5132;">
+                <div><h3>Active Listings</h3><h2 id="card-listings">0</h2></div>
+                <i class="lni lni-layout" style="font-size: 28px; opacity:0.4;"></i>
+            </div>
+            <div class="stat-card" style="background: white; color: #333; border: 1px solid #eee;">
+                <div><h3 style="color:#666">Needs Action</h3><h2 id="card-negotiations">0</h2></div>
+                <i class="lni lni-warning" style="font-size: 28px; color:#f59e0b;"></i>
+            </div>
+            <div class="stat-card" style="background: #f59e0b;">
+                <div><h3>Active Orders</h3><h2 id="card-orders">0</h2></div>
+                <i class="lni lni-cart" style="font-size: 28px; opacity:0.4;"></i>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
+            <div class="card" style="background: linear-gradient(135deg, #0e8354 0%, #16a34a 100%); color: white;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4 style="margin:0">Profit Trend</h4>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <select id="chartFilter" onchange="updateChartData()" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); border-radius:4px; padding:4px; outline:none; cursor:pointer; font-size:12px;">
+                            <option value="day" style="color:black;">Day-wise</option>
+                            <option value="month" style="color:black;">Month-wise</option>
+                        </select>
+                        <h3 style="margin:0; font-size:18px;" id="total-profit-display">Total: ₹0</h3>
+                    </div>
+                </div>
+                <canvas id="profitChart" style="max-height: 160px; margin-top:15px;"></canvas>
+            </div>
+            <div class="card" style="text-align:center; display:flex; flex-direction:column; justify-content:center;">
+                <p style="color:#666; margin:0;">Total Valuation</p>
+                <h2 id="total-revenue" style="color:var(--primary-green); margin:10px 0;">₹0</h2>
+                <small style="color:#999">Calculated from your stock</small>
+            </div>
+        </div>
+
+        <h3>Recent Sold (History)</h3>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>Product</th><th>Qty</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody id="recent-sold-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="products" class="section">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>Inventory Management</h2>
+            <button class="btn-primary" onclick="toggleForm()">+ List New Product</button>
+        </div>
+        <div id="productForm" class="card" style="display:none; border: 1px solid var(--primary-green); margin-top:15px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <input id="p-name" placeholder="Crop Name" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input id="p-price" placeholder="Price/kg" type="number" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input id="p-qty" placeholder="Stock Qty" type="number" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input type="file" id="p-file" accept="image/*" onchange="processFile(this)">
+            </div>
+            <button class="btn-primary" style="margin-top:15px" onclick="saveProduct()">List Product</button>
+        </div>
+        <div id="productList" class="grid" style="margin-top:20px;"></div>
+    </div>
+
+    <div id="negotiation" class="section">
+        <h2>Active Negotiations</h2>
+        <div id="neg-list">
+            </div>
+    </div>
+
+    <div id="customers" class="section">
+        <h2>Buyer Order Management</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>Buyer Name</th><th>Crop</th><th>Total Amount</th><th>Action Status</th></tr>
+                </thead>
+                <tbody id="buyer-orders-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="support" class="section"><h2>Support</h2><div class="card">Contact us for help.</div></div>
+</div>
+
+<script>
+// DATA STATES
+let products = [
+    { id: 1, name: "Organic Tomatoes", price: 40, qty: 500, img: "https://via.placeholder.com/200?text=Tomatoes" },
+    { id: 2, name: "Basmati Rice", price: 85, qty: 1200, img: "https://via.placeholder.com/200?text=Rice" }
+];
+
+let buyerOrders = [
+    { id: 101, buyer: "Rahul Kumar", crop: "Red Chillies", amount: 2400 },
+    { id: 102, buyer: "Fresh Mart", crop: "Potatoes", amount: 15000 }
+];
+
+let negotiations = [
+    { id: 501, buyer: "Hotel Grand", crop: "Onions", offer: "₹18/kg" }
+];
+
+// NEW: Added dates to delivered sales to make the graph work beautifully
+let deliveredSales = [
+    { id: 201, crop: "Wheat", amount: 4500, date: new Date(new Date().setDate(new Date().getDate() - 3)) },
+    { id: 202, crop: "Tomatoes", amount: 2100, date: new Date(new Date().setDate(new Date().getDate() - 1)) }
+];
+
+let currentBase64 = "";
+let profitChartInstance; // NEW: Storing chart instance globally
+
+// AUTO-UPDATE ENGINE
+function autoUpdateCounters() {
+    document.getElementById('card-orders').innerText = buyerOrders.length;
+    document.getElementById('card-negotiations').innerText = negotiations.length;
+    document.getElementById('card-listings').innerText = products.length;
+}
+
+// NAVIGATION
+function showSection(id, element) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
+    element.classList.add('active-link');
+}
+
+// PRODUCT FUNCTIONS
+function toggleForm() {
+    const f = document.getElementById('productForm');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function processFile(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => { currentBase64 = e.target.result; };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function saveProduct() {
+    const name = document.getElementById('p-name').value;
+    const price = parseInt(document.getElementById('p-price').value);
+    const qty = parseInt(document.getElementById('p-qty').value);
+    if(!name || isNaN(price)) return;
+    
+    products.push({ id: Date.now(), name, price, qty, img: currentBase64 || "https://via.placeholder.com/200" });
+    renderProducts();
+    autoUpdateCounters(); 
+    updateTotalValuation();
+    toggleForm();
+}
+
+function changePrice(id, delta) {
+    const p = products.find(p => p.id === id);
+    if(p) { p.price = Math.max(1, p.price + delta); renderProducts(); updateTotalValuation(); }
+}
+
+function removeProduct(id) {
+    products = products.filter(p => p.id !== id);
+    renderProducts();
+    autoUpdateCounters(); 
+    updateTotalValuation();
+}
+
+function updateTotalValuation() {
+    const val = products.reduce((acc, p) => acc + (p.price * p.qty), 0);
+    document.getElementById('total-revenue').innerText = `₹${val.toLocaleString()}`;
+}
+
+function renderProducts() {
+    let html = '';
+    products.forEach(p => {
+        html += `<div class="card" style="text-align:center; padding:15px;">
+            <img src="${p.img}" style="width:100%; height:120px; object-fit:cover; border-radius:10px;">
+            <h4 style="margin:10px 0 5px;">${p.name}</h4>
+            <div class="price-ctrl">
+                <button onclick="changePrice(${p.id}, -1)">-</button>
+                <b>₹${p.price}</b>
+                <button onclick="changePrice(${p.id}, 1)">+</button>
+            </div>
+            <button class="btn-danger" onclick="removeProduct(${p.id})">Remove</button>
+        </div>`;
+    });
+    document.getElementById('productList').innerHTML = html;
+}
+
+// NEGOTIATION FUNCTIONS
+function finalizeNeg(id) {
+    negotiations = negotiations.filter(n => n.id !== id);
+    renderNegotiations();
+    autoUpdateCounters(); 
+}
+
+function renderNegotiations() {
+    let html = '';
+    negotiations.forEach(n => {
+        html += `<div class="card">
+            <strong>${n.buyer}</strong>
+            <p>Offer for ${n.crop}: ${n.offer}</p>
+            <button class="btn-primary" onclick="finalizeNeg(${n.id})">Accept Offer</button>
+        </div>`;
+    });
+    document.getElementById('neg-list').innerHTML = html || '<div class="card">No active negotiations.</div>';
+}
+
+// ORDER & CUSTOMER FUNCTIONS
+function shipOrder(orderId) {
+    const index = buyerOrders.findIndex(o => o.id === orderId);
+    if (index > -1) {
+        const order = buyerOrders.splice(index, 1)[0];
+        order.date = new Date(); // NEW: Stamp today's date on newly delivered item
+        deliveredSales.unshift(order);
+        
+        renderOrders();
+        autoUpdateCounters();
+        updateChartData(); // NEW: Update graph dynamically
+    }
+}
+
+function renderOrders() {
+    let buyerHtml = '';
+    buyerOrders.forEach(o => {
+        buyerHtml += `<tr>
+            <td>${o.buyer}</td><td>${o.crop}</td><td>₹${o.amount}</td>
+            <td><button class="status-badge status-processing" onclick="shipOrder(${o.id})">Mark Delivered</button></td>
+        </tr>`;
+    });
+    document.getElementById('buyer-orders-table').innerHTML = buyerHtml || '<tr><td colspan="4">No pending orders.</td></tr>';
+
+    let soldHtml = '';
+    deliveredSales.forEach(s => {
+        // Format date beautifully for the table
+        const dateStr = s.date ? s.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '';
+        soldHtml += `<tr>
+            <td>${s.crop} <small style="color:#666;">(${dateStr})</small></td><td>1 Unit</td><td>₹${s.amount}</td>
+            <td><span class="status-badge status-delivered">Delivered</span></td>
+        </tr>`;
+    });
+    document.getElementById('recent-sold-table').innerHTML = soldHtml || '<tr><td colspan="4">No sales history yet.</td></tr>';
+}
+
+// NEW: DYNAMIC CHART ENGINE
+function updateChartData() {
+    // 1. Calculate & Display Total Profit
+    const totalProfit = deliveredSales.reduce((sum, item) => sum + item.amount, 0);
+    document.getElementById('total-profit-display').innerText = `Total: ₹${totalProfit.toLocaleString()}`;
+
+    // 2. Group data by Day or Month
+    const filter = document.getElementById('chartFilter').value;
+    const groupedData = {};
+
+    // Sort ascending by date
+    const sortedSales = [...deliveredSales].sort((a, b) => a.date - b.date);
+
+    sortedSales.forEach(sale => {
+        let key;
+        if (filter === 'day') {
+            key = sale.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }); 
+        } else {
+            key = sale.date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }); 
+        }
+        
+        if (!groupedData[key]) groupedData[key] = 0;
+        groupedData[key] += sale.amount;
+    });
+
+    const labels = Object.keys(groupedData);
+    const dataPoints = Object.values(groupedData);
+
+    // 3. Update Chart
+    if (profitChartInstance) {
+        profitChartInstance.data.labels = labels.length ? labels : ['No Data'];
+        profitChartInstance.data.datasets[0].data = dataPoints.length ? dataPoints : [0];
+        profitChartInstance.update();
+    }
+}
+
+function initChart() {
+    const ctx = document.getElementById('profitChart').getContext('2d');
+    profitChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{ 
+                label: 'Profit (₹)',
+                data: [], 
+                borderColor: '#ffffff', 
+                backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+                fill: true, 
+                tension: 0.4 
+            }]
+        },
+        options: { 
+            plugins: { legend: { display: false } }, 
+            scales: { 
+                x: { ticks: { color: 'rgba(255,255,255,0.8)' }, grid: { display: false } }, 
+                y: { ticks: { color: 'rgba(255,255,255,0.8)' }, grid: { color: 'rgba(255,255,255,0.1)' } } 
+            } 
+        }
+    });
+    updateChartData(); // Fill initial data
+}
+
+// INIT
+initChart();
+renderProducts();
+renderNegotiations();
+renderOrders();
+updateTotalValuation();
+autoUpdateCounters();
+</script>
+</body>
+</html>
