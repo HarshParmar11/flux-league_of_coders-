@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Support | Farm to Market Connect</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <style>
+        /* 🌾 Background using uploaded grain image */
+        body {
+            margin: 0;
+            padding: 0;
+            /* Replace the URL below with your hosted path to the grain image */
+            background-image: url('https://raw.githubusercontent.com/HarshParmar11/flux-league_of_coders-/main/buy.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: bgZoom 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgZoom {
+            from { background-size: 105%; }
+            to { background-size: 120%; }
+        }
+
+        /* 🌌 Darker Gradient Overlay for better text contrast */
+        .page-overlay {
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(
+                110deg,
+                rgba(0,0,0,0.8) 0%,
+                rgba(0,0,0,0.6) 50%,
+                rgba(0,0,0,0.3) 100%
+            );
+        }
+
+        .split-layout {
+            min-height: 100vh;
+        }
+
+        /* ✨ Animation */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .left-content-panel,
+        .details-form-panel {
+            animation: fadeSlideUp 0.8s ease forwards;
+        }
+
+        /* 🧊 Glassmorphism Form Panel */
+        .details-form-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            margin: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: all 0.4s ease;
+        }
+
+        .details-form-panel:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .form-label {
+            color: #ffffff;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            border: none;
+            transition: all 0.25s ease;
+            padding: 12px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: #ffffff;
+            transform: scale(1.01);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5); /* Golden glow for buyers */
+        }
+
+        /* 🚀 Buyer Button (Golden/Amber Theme) */
+        .btn-buyer {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 12px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-buyer:hover {
+            background-color: #ffca2c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        @media (max-width: 991px) {
+            .details-form-panel {
+                margin: 20px;
+                padding: 30px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-overlay">
+    <div class="container-fluid p-0">
+        <div class="row g-0 split-layout align-items-stretch">
+
+            <div class="col-12 col-lg-6 d-flex align-items-center">
+                <div class="w-100 p-4 p-xl-5 left-content-panel">
+                    <div style="max-width:550px">
+                        <span class="badge bg-warning text-dark mb-3">Buyer Solutions</span>
+                        <h2 class="display-5 fw-bold text-white">Source Fresh, Direct from Farms</h2>
+                        <p class="lead opacity-75 mb-4">
+                            Looking for bulk procurement, quality certification, or logistics support? Our dedicated buyer desk is here to help you scale your supply chain.
+                        </p>
+
+                        <div class="mt-4">
+                            <p><strong>🏢 Corporate Office:</strong><br>Market Square, S.G. Highway, Ahmedabad</p>
+                            <p><strong>📞 Procurement Desk:</strong> +91 98765 00001</p>
+                            <p><strong>📧 Sales Inquiry:</strong> buyers@farmtomarket.in</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 d-flex align-items-center">
+                <div class="details-form-panel w-100 p-4 p-xl-5">
+                    <form id="buyerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name / Business Name</label>
+                            <input type="text" class="form-control" placeholder="John Doe or FreshMart Ltd." required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Contact Number</label>
+                                <input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Type of Buyer</label>
+                                <select class="form-select">
+                                    <option selected>Retailer</option>
+                                    <option>Wholesaler</option>
+                                    <option>Exporter</option>
+                                    <option>Restaurant/Hotel</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Primary Interest</label>
+                            <select class="form-select">
+                                <option disabled selected>How can we assist?</option>
+                                <option>Bulk Order Inquiry</option>
+                                <option>Quality & Certification</option>
+                                <option>Logistics & Delivery</option>
+                                <option>Price Quotations</option>
+                                <option>Vendor Partnership</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Tell us about your requirements</label>
+                            <textarea class="form-control" rows="4" placeholder="Mention crops and quantities needed..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-buyer w-100">Send Inquiry</button>
+
+                        <div id="alertBox" class="alert alert-warning mt-3 text-center py-2" style="display:none; color: #664d03;">
+                           <strong>Request Received!</strong> Our sales team will call you back.
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("buyerForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const alertBox = document.getElementById("alertBox");
+        alertBox.style.display = "block";
+        this.reset();
+        
+        // Optional: Hide alert after 5 seconds
+        setTimeout(() => {
+            alertBox.style.display = "none";
+        }, 5000);
+    });
+</script>
+
+</body>
+</html>
