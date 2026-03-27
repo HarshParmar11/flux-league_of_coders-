@@ -3,242 +3,465 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FarmLink — Minimal Buyer Dashboard</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>FarmLink — Buyer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --sidebar-w: 260px; }
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    /* Minimalist faint background */
-    background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=80') center/cover fixed;
-  }
-  .bg-overlay { background-color: rgba(248, 249, 250, 0.94); min-height: 100vh; display: flex; }
-  .font-serif { font-family: 'Playfair Display', serif; }
+:root {
+  --green: #22c55e; --green-mid: #16a34a; --green-light: rgba(34,197,94,0.15);
+  --amber: #fbbf24; --amber-light: rgba(251,191,36,0.15);
+  --red: #ef4444; --red-light: rgba(239, 68, 68, 0.15);
+  --blue: #3b82f6; --blue-light: rgba(59,130,246,0.15);
   
-  /* Sidebar */
-  .sidebar { width: var(--sidebar-w); position: fixed; inset: 0 auto 0 0; z-index: 1040; }
-  .nav-link { color: #6c757d; font-weight: 500; border-left: 3px solid transparent; transition: 0.2s; }
-  .nav-link:hover { color: #198754; background: #f8f9fa; }
-  .nav-link.active { color: #198754 !important; background: rgba(25,135,84,0.1); border-left-color: #198754; font-weight: 600; }
+  /* Text Colors for Lite White Cards */
+  --text: #1f2937; /* Dark Gray */
+  --text-2: #374151; /* Medium Dark Gray */
+  --text-muted: #6b7280; /* Slate Gray */
   
-  /* Main Content */
-  .main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
-  .topbar { position: sticky; top: 0; z-index: 1030; backdrop-filter: blur(10px); background: rgba(255,255,255,0.9) !important; }
+  /* Lite White Glassmorphism Card */
+  --card: rgba(255, 255, 255, 0.85); 
+  --border: rgba(255, 255, 255, 0.5); 
   
-  /* Pages & Animations */
-  .page { display: none; animation: fadeIn 0.4s ease; padding: 2rem; }
-  .page.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* Lite Form Element Styles */
+  --input-bg-light: rgba(0,0,0,0.03); 
+  --input-border-light: rgba(0,0,0,0.08); 
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body, html {
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  color: var(--text); 
+  min-height: 100vh;
+  margin: 0;
   
-  /* Utilities */
-  .icon-box { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.25rem; }
-  .crop-img-box { height: 120px; font-size: 3rem; display: flex; align-items: center; justify-content: center; background: #f8f9fa; position: relative; }
-  .bubble { background: #f8f9fa; padding: 10px 16px; border-radius: 16px 16px 16px 4px; font-size: 0.85rem; max-width: 85%; }
-  .bubble.me { background: rgba(25,135,84,0.1); color: #198754; border-radius: 16px 16px 4px 16px; border: 1px solid rgba(25,135,84,0.2); }
-  
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 10px; }
+  /* UPDATED BACKGROUND: Switched to a reliable Pexels image of fresh produce */
+  background: 
+    linear-gradient(to bottom, 
+      rgba(15, 23, 42, 0.8) 0%, 
+      rgba(15, 23, 42, 0.8) 70px, 
+      rgba(15, 23, 42, 0.25) 250px, 
+      rgba(15, 23, 42, 0.75) 100%), 
+    url('https://images.pexels.com/photos/1367243/pexels-photo-1367243.jpeg?auto=compress&cs=tinysrgb&w=1920');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+
+/* ── UTILITIES ── */
+.glass { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.15); }
+.flex-btwn { display: flex; align-items: center; justify-content: space-between; }
+.sub-txt { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+.txt-green { color: var(--green); } .txt-amber { color: var(--amber); } .txt-red { color: #dc2626; } .txt-blue { color: #2563eb; }
+.font-serif { font-family: 'Playfair Display', serif; }
+
+/* ── TOP NAVBAR ── */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 70px;
+  background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 100;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+}
+.brand-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; }
+.brand-logo span { color: var(--green); }
+
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; border-radius: 30px; text-decoration: none; }
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.nav-item.active { color: var(--green); background: var(--green-light); border: 1px solid rgba(34,197,94,0.3); }
+.nav-item svg { width: 16px; height: 16px; }
+.nav-badge { background: var(--amber); color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; margin-left: 4px; }
+
+.nav-profile { display: flex; align-items: center; gap: 12px; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 16px; margin-left: 8px; }
+.buyer-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-mid)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #fff; }
+
+/* ── MAIN CONTENT ── */
+.main { padding: 100px 40px 40px; max-width: 1400px; margin: 0 auto; }
+
+/* PAGE HEADER */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+.page-title { font-size: 1.8rem; font-weight: 800; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.4); } 
+.header-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Inputs on dark/vibrant background */
+.topbar-search { background: rgba(0,0,0,0.4) !important; border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 30px; display: flex; align-items: center; gap: 8px; padding: 8px 16px; width: 280px; transition: 0.3s ease; backdrop-filter: blur(8px); }
+.topbar-search:focus-within { background: rgba(0,0,0,0.6) !important; border-color: var(--green) !important; box-shadow: 0 0 15px rgba(34,197,94,0.3); }
+.topbar-search input { border: none; background: transparent; font-size: 0.85rem; outline: none; color: #fff; width: 100%; }
+.topbar-search input::placeholder { color: rgba(255,255,255,0.7); }
+.topbar-search svg { color: #fff; width: 16px; height: 16px; }
+
+/* Inputs on light white cards */
+.form-input, .form-select, .form-textarea, .price-input { background: var(--input-bg-light); border: 1px solid var(--input-border-light); color: #000; border-radius: 30px; width: 100%; padding: 10px 16px; font-size: 0.85rem; transition: 0.3s ease; }
+.form-input:focus, .form-select:focus, .form-textarea:focus, .price-input:focus { background: rgba(0,0,0,0.05); border-color: var(--green); box-shadow: 0 0 15px rgba(34,197,94,0.15); outline: none; }
+.form-input::placeholder, .form-textarea::placeholder, .price-input::placeholder { color: #6b7280; opacity: 0.8; }
+.form-textarea { resize: vertical; min-height: 80px; border-radius: 16px; }
+
+.notif-btn { position: relative; cursor: pointer; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: 0.3s; color: #fff; backdrop-filter: blur(8px); }
+.notif-btn:hover { background: var(--green); border-color: var(--green); color: #fff; }
+.notif-btn svg { width: 18px; height: 18px; }
+.notif-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; box-shadow: 0 0 0 2px #0f172a; }
+
+/* ── BUTTONS ── */
+.btn-sm { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 10px 20px; border-radius: 30px; cursor: pointer; border: none; transition: 0.3s ease; display: flex; align-items: center; gap: 6px; }
+.btn-primary { background: var(--green); color: #fff; box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+.btn-primary:hover { background: var(--green-mid); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+.btn-outline { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; backdrop-filter: blur(5px); }
+.btn-outline:hover { background: var(--green); color: #fff; border-color: var(--green); box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+
+/* ── PAGES & ANIMATIONS ── */
+.page { display: none; animation: fadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── DASHBOARD STATS ── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card, .table-wrap, .neg-card, .logistics-card, .pay-card { border-radius: 24px; padding: 24px; }
+.stat-card { display: flex; flex-direction: column; gap: 16px; transition: 0.3s; position: relative; overflow: hidden; }
+.stat-card:hover { transform: translateY(-5px); border-color: rgba(34,197,94,0.3); }
+.stat-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid rgba(0,0,0,0.05); }
+.stat-val { font-size: 1.8rem; font-weight: 700; line-height: 1.1; color: var(--text); }
+
+.sec-hdr { margin-bottom: 16px; margin-top: 10px; }
+.sec-hdr h3 { font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+/* ── CROPS ── */
+.crop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.crop-card { border-radius: 20px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; padding: 0; }
+.crop-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); border-color: var(--green); }
+.crop-img { width: 100%; height: 130px; background: rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; position: relative; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.crop-farmer-tag { position: absolute; bottom: 10px; left: 10px; background: rgba(255,255,255,0.9); font-size: 0.65rem; font-weight: 700; padding: 6px 12px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(0,0,0,0.1); color: #000; }
+.crop-body { padding: 16px; }
+.crop-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; color: var(--text); }
+.crop-price { font-size: 1.25rem; font-weight: 700; color: var(--green); }
+.crop-price span { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+.availability-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.btn-neg { font-size: 0.75rem; font-weight: 600; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--green); color: var(--green); background: rgba(34,197,94,0.05); cursor: pointer; transition: 0.3s; }
+.btn-neg:hover { background: var(--green); color: #fff; box-shadow: 0 2px 10px rgba(34,197,94,0.3); }
+
+/* ── FILTERS & TABLES ── */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+.filter-chip { padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); font-size: 0.8rem; font-weight: 600; color: #fff; background: rgba(0,0,0,0.4); cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); }
+.filter-chip:hover, .filter-chip.active { background: var(--green); color: #fff; border-color: var(--green); box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+
+.table-wrap { padding: 0; overflow: hidden; margin-bottom: 32px; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 16px 20px; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.1); background: rgba(0,0,0,0.03); }
+td { padding: 16px 20px; font-size: 0.9rem; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--text-2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(0,0,0,0.1); }
+.status-pill.delivered { background: rgba(34,197,94,0.1); color: #166534; border-color: rgba(34,197,94,0.2); }
+.status-pill.transit { background: rgba(59,130,246,0.1); color: #1e40af; border-color: rgba(59,130,246,0.2); }
+.status-pill.pending { background: rgba(251,191,36,0.1); color: #854d0e; border-color: rgba(251,191,36,0.2); }
+.status-pill.negotiate { background: rgba(168,85,247,0.1); color: #6b21a8; border-color: rgba(168,85,247,0.2); }
+
+.order-actions { display: flex; gap: 8px; }
+.act-btn { padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.act-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
+.act-track { background: rgba(59,130,246,0.1); color: #1e40af; } .act-pay { background: rgba(34,197,94,0.1); color: #166534; } .act-neg { background: rgba(168,85,247,0.1); color: #6b21a8; }
+
+/* ── NEGOTIATIONS ── */
+.page-subtitle { color: #fff; font-size: 1rem; margin-bottom: 24px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+
+.neg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+.neg-header { margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 16px; }
+.neg-card h4 { color: var(--text); }
+.neg-status { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 30px; border: 1px solid rgba(0,0,0,0.1); }
+.neg-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
+.neg-row strong { color: var(--text); }
+.price-input-row { display: flex; gap: 12px; margin-top: 20px; }
+.btn-send-offer { background: var(--green); color: #fff; border: none; padding: 0 24px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+.btn-send-offer:hover { background: var(--green-mid); transform: translateY(-2px); }
+
+.offer-thread { margin-top: 20px; padding: 16px; background: rgba(0,0,0,0.03); border-radius: 16px; border: 1px solid rgba(0,0,0,0.05); }
+.offer-msg { display: flex; flex-direction: column; margin-bottom: 12px; }
+.offer-msg .bubble { padding: 10px 16px; font-size: 0.85rem; max-width: 85%; backdrop-filter: blur(5px); }
+.offer-msg.buyer { align-items: flex-end; } .offer-msg.buyer .bubble { background: rgba(34,197,94,0.1); color: #000; border: 1px solid rgba(34,197,94,0.2); border-radius: 16px 16px 4px 16px; }
+.offer-msg.farmer { align-items: flex-start; } .offer-msg.farmer .bubble { background: rgba(0,0,0,0.05); color: #374151; border: 1px solid rgba(0,0,0,0.1); border-radius: 16px 16px 16px 4px; }
+
+/* ── LOGISTICS ── */
+.logistics-card h4 { color: var(--text); }
+.step-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); transition: 0.3s; }
+.step.done .step-circle { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 0 15px rgba(34,197,94,0.2); }
+.step.current .step-circle { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+.step-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; text-align: center; }
+.step.done .step-label, .step.current .step-label { color: var(--text); font-weight: 600; }
+.step-line { flex: 1; height: 4px; background: rgba(0,0,0,0.05); margin: 0 -4px 28px; transition: 0.3s; }
+.step-line.done { background: var(--green); box-shadow: 0 0 8px rgba(34,197,94,0.2); }
+.logi-meta { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); }
+.logi-meta-item { font-size: 0.85rem; color: var(--text-muted); } .logi-meta-item strong { color: var(--text); display: block; font-size: 0.9rem; margin-bottom: 4px; }
+
+/* ── PAYMENTS & MODAL ── */
+.pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+.pay-card h4 { font-size: 1.1rem; margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 16px; color: var(--text); }
+.pay-row { display: flex; justify-content: space-between; font-size: 0.9rem; padding: 12px 0; border-bottom: 1px dashed rgba(0,0,0,0.1); }
+.pay-row span { color: var(--text-muted); }
+.pay-row .val { font-weight: 600; color: var(--text); }
+.pay-row:last-of-type { border-bottom: none; }
+.pay-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.15rem; margin-top: 16px; padding-top: 20px; border-top: 2px solid rgba(0,0,0,0.2); color: var(--text); }
+.btn-pay-now { width: 100%; margin-top: 24px; background: var(--green); color: #fff; border: none; padding: 16px; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(34,197,94,0.3); }
+.btn-pay-now:hover { background: var(--green-mid); transform: translateY(-2px); }
+
+.payment-methods { display: flex; flex-direction: column; gap: 16px; }
+.pay-method { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(0,0,0,0.1); background: rgba(0,0,0,0.01); cursor: pointer; transition: 0.3s; }
+.pay-method:hover, .pay-method.selected { border-color: var(--green); background: rgba(34,197,94,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.pay-method h4 { color: var(--text); }
+.pay-method-name { font-size: 0.9rem; font-weight: 600; color: var(--text); } 
+.pay-method-desc { font-size: 0.8rem; color: var(--text-muted); }
+.pay-radio { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.2); transition: 0.3s; }
+.pay-method.selected .pay-radio { background: var(--green); border-color: var(--green); box-shadow: inset 0 0 0 4px #f8f9fa; }
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: 0.3s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.1); border-radius: 24px; padding: 40px; width: 500px; max-width: 95vw; transform: translateY(20px); transition: 0.3s; color: #000; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+.modal-overlay.open .modal { transform: translateY(0); }
+.label-text { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; font-weight: 700; letter-spacing: 0.5px; }
+.form-group { margin-bottom: 20px; } .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 30px; right: 30px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.1); padding: 16px 28px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 12px; z-index: 300; transform: translateY(80px); opacity: 0; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 40px rgba(0,0,0,0.2); color: #000; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@media (max-width: 900px) { 
+  .top-nav { padding: 0 20px; }
+  .main { padding: 100px 20px 20px; }
+  .nav-links { display: none; } 
+  .stats-row { grid-template-columns: 1fr 1fr; } 
+  .neg-grid, .pay-grid { grid-template-columns: 1fr; } 
+}
+@media (max-width: 640px) { 
+  .stats-row { grid-template-columns: 1fr; } 
+  .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .header-actions { width: 100%; justify-content: space-between; }
+  .topbar-search { display: none; }
+}
 </style>
 </head>
 <body>
 
-<div class="bg-overlay">
-  <aside class="sidebar bg-white border-end shadow-sm h-100 d-flex flex-column">
-    <div class="p-4 border-bottom">
-      <h4 class="font-serif fw-bold mb-0">Farm<span class="text-success">Link</span></h4>
-      <small class="text-muted text-uppercase fw-bold" style="font-size:0.65rem; letter-spacing:1px;">Buyer Dashboard</small>
-    </div>
-    <div class="p-3 overflow-auto">
-      <small class="text-muted text-uppercase fw-bold px-3 mb-2 d-block" style="font-size:0.65rem">Main Menu</small>
-      <nav class="nav flex-column gap-1 mb-4">
-        <a class="nav-link active rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('dashboard',this)"><i class="bi bi-grid-1x2"></i> Dashboard</a>
-        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('browse',this)"><i class="bi bi-shop"></i> Browse Crops</a>
-        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('negotiate',this)">
-          <i class="bi bi-chat-left-text"></i> Negotiations <span class="badge bg-warning text-dark ms-auto rounded-pill">3</span>
-        </a>
-      </nav>
-      <small class="text-muted text-uppercase fw-bold px-3 mb-2 d-block" style="font-size:0.65rem">Orders & Logistics</small>
-      <nav class="nav flex-column gap-1">
-        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('orders',this)"><i class="bi bi-receipt"></i> My Orders</a>
-        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('logistics',this)"><i class="bi bi-truck"></i> Logistics</a>
-        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('payment',this)"><i class="bi bi-wallet2"></i> Payments</a>
-      </nav>
-    </div>
-    <div class="mt-auto p-4 border-top">
-      <div class="d-flex align-items-center gap-3">
-        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width:40px;height:40px;">SR</div>
-        <div class="lh-sm">
-          <strong class="d-block fs-6">Sharma Rest.</strong>
-          <small class="text-success fw-semibold" style="font-size:0.7rem;"><i class="bi bi-patch-check-fill"></i> Verified Buyer</small>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <div class="main-content">
-    <header class="topbar border-bottom px-4 py-3 d-flex align-items-center justify-content-between shadow-sm">
-      <h4 class="font-serif fw-bold mb-0" id="pageTitle">Dashboard</h4>
-      <div class="d-flex align-items-center gap-3">
-        <div class="input-group bg-light rounded-pill px-3 py-1 border d-none d-md-flex" style="width: 250px;">
-          <i class="bi bi-search text-muted mt-1"></i>
-          <input type="text" class="form-control border-0 bg-transparent shadow-none" placeholder="Search...">
-        </div>
-        <button class="btn btn-light rounded-circle border shadow-sm position-relative"><i class="bi bi-bell"></i><span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span></button>
-        <button class="btn btn-success rounded-pill fw-semibold shadow-sm px-4" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-plus-lg"></i> New Order</button>
-      </div>
-    </header>
-
-    <div class="page active" id="page-dashboard">
-      <div class="row g-4 mb-5">
-        <div class="col-sm-6 col-xl-3">
-          <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body d-flex align-items-center gap-3">
-              <div class="icon-box bg-success bg-opacity-10 text-success">🌾</div>
-              <div><h4 class="font-serif fw-bold mb-0">₹2.4L</h4><small class="text-muted">Spent (Month)</small><div class="text-success small fw-bold mt-1"><i class="bi bi-arrow-up"></i> 12%</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body d-flex align-items-center gap-3">
-              <div class="icon-box bg-warning bg-opacity-10 text-warning">📦</div>
-              <div><h4 class="font-serif fw-bold mb-0">14</h4><small class="text-muted">Active Orders</small><div class="text-success small fw-bold mt-1"><i class="bi bi-arrow-up"></i> 3 today</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body d-flex align-items-center gap-3">
-              <div class="icon-box bg-info bg-opacity-10 text-info">🤝</div>
-              <div><h4 class="font-serif fw-bold mb-0">3</h4><small class="text-muted">Negotiations</small><div class="text-muted small mt-1">Awaiting reply</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body d-flex align-items-center gap-3">
-              <div class="icon-box bg-danger bg-opacity-10 text-danger">⏳</div>
-              <div><h4 class="font-serif fw-bold mb-0">₹38k</h4><small class="text-muted">Pending Pay</small><div class="text-danger small fw-bold mt-1">Due 3 days</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-end mb-3">
-        <h5 class="font-serif fw-bold mb-0">Recent Orders</h5>
-        <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="showPage('orders',null)">View All</button>
-      </div>
-      <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light text-uppercase text-muted" style="font-size:0.75rem;">
-              <tr><th class="ps-4">Order ID</th><th>Crop</th><th>Farmer</th><th>Qty</th><th>Amount</th><th>Status</th><th class="pe-4">Action</th></tr>
-            </thead>
-            <tbody class="border-top-0">
-              <tr><td class="ps-4 fw-semibold">#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel</td><td>200 kg</td><td>₹5,600</td><td><span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-2 py-1"><i class="bi bi-truck"></i> In Transit</span></td><td class="pe-4"><button class="btn btn-sm btn-light border text-primary fw-semibold rounded-pill px-3" onclick="showPage('logistics',null)">Track</button></td></tr>
-              <tr><td class="ps-4 fw-semibold">#FL-2398</td><td>🌾 Wheat</td><td>Suresh Kumar</td><td>500 kg</td><td>₹11,000</td><td><span class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill px-2 py-1"><i class="bi bi-hourglass-split"></i> Pending</span></td><td class="pe-4"><button class="btn btn-sm btn-success fw-semibold rounded-pill px-3" onclick="showPage('payment',null)">Pay</button></td></tr>
-              <tr><td class="ps-4 fw-semibold">#FL-2391</td><td>🥔 Potato</td><td>Anita Devi</td><td>300 kg</td><td>₹7,200</td><td><span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-2 py-1"><i class="bi bi-check2"></i> Delivered</span></td><td class="pe-4"><button class="btn btn-sm btn-light border text-muted fw-semibold rounded-pill px-3">Invoice</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-end mb-3">
-        <h5 class="font-serif fw-bold mb-0">Available Now</h5>
-        <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="showPage('browse',null)">Browse All</button>
-      </div>
-      <div class="row g-4" id="featuredCrops"></div>
-    </div>
-
-    <div class="page" id="page-browse">
-      <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
-        <button class="btn btn-success rounded-pill px-4 shadow-sm">All Crops</button>
-        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🍅 Vegetables</button>
-        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🌾 Grains</button>
-        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🍎 Fruits</button>
-        <select class="form-select rounded-pill shadow-sm border-0 w-auto ms-auto bg-white"><option>Sort: Best Price</option><option>Newest</option></select>
-      </div>
-      <div class="row g-4" id="browseCrops"></div>
-    </div>
-
-    <div class="page" id="page-negotiate">
-      <p class="text-muted mb-4">Negotiate prices directly with farmers to reach a fair deal.</p>
-      <div class="row g-4">
-        <div class="col-xl-6">
-          <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
-            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
-              <div><h5 class="font-serif fw-bold mb-1">🌾 Wheat — 500 kg</h5><small class="text-muted"><i class="bi bi-person"></i> Suresh Kumar, Ludhiana</small></div>
-              <span class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill px-3 py-2">Counter Offer</span>
-            </div>
-            <div class="d-flex justify-content-between text-muted small mb-1"><span>Listed: <strong>₹22/kg</strong></span><span>You: <strong>₹19/kg</strong></span><span>Farmer: <strong class="text-warning">₹21/kg</strong></span></div>
-            <div class="bg-light rounded-4 p-3 mt-3 mb-3">
-              <div class="d-flex flex-column align-items-end mb-2"><div class="bubble me shadow-sm">Can you do ₹19/kg?</div><small class="text-muted mt-1" style="font-size:0.65rem">You · 2h ago</small></div>
-              <div class="d-flex flex-column align-items-start"><div class="bubble shadow-sm border">Best is ₹21/kg. Grade A.</div><small class="text-muted mt-1" style="font-size:0.65rem">Farmer · 1h ago</small></div>
-            </div>
-            <div class="input-group"><input type="text" class="form-control rounded-start-pill border-end-0 bg-light" placeholder="Offer (e.g. ₹20)"><button class="btn btn-success rounded-end-pill px-4" onclick="showToast()">Send</button></div>
-          </div>
-        </div>
-        <div class="col-xl-6">
-          <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
-            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
-              <div><h5 class="font-serif fw-bold mb-1">🍅 Tomato — 200 kg</h5><small class="text-muted"><i class="bi bi-person"></i> Ramesh Patel, Nashik</small></div>
-              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-pill px-3 py-2">Awaiting Reply</span>
-            </div>
-            <div class="d-flex justify-content-between text-muted small mb-1"><span>Listed: <strong>₹30/kg</strong></span><span>You: <strong>₹26/kg</strong></span><span>Saving: <strong class="text-success">₹800</strong></span></div>
-            <div class="bg-light rounded-4 p-3 mt-3 mb-3">
-              <div class="d-flex flex-column align-items-end mb-2"><div class="bubble me shadow-sm">Can you offer ₹26/kg for regular orders?</div><small class="text-muted mt-1" style="font-size:0.65rem">You · 3h ago</small></div>
-              <div class="d-flex flex-column align-items-start"><div class="bubble shadow-sm border">Let me check stock.</div><small class="text-muted mt-1" style="font-size:0.65rem">Farmer · 2h ago</small></div>
-            </div>
-            <div class="input-group"><input type="text" class="form-control rounded-start-pill border-end-0 bg-light" placeholder="Revise offer"><button class="btn btn-success rounded-end-pill px-4" onclick="showToast()">Send</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-orders"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-receipt fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Order History</h4><p class="text-muted">Your past and current orders will appear here.</p></div></div>
-    <div class="page" id="page-logistics"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-truck fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Logistics Tracking</h4><p class="text-muted">Live tracking map goes here.</p></div></div>
-    <div class="page" id="page-payment"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-wallet2 fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Payments</h4><p class="text-muted">Payment gateways and invoices.</p></div></div>
+<nav class="top-nav">
+  <a href="#" class="brand-logo">Farm<span>Link</span></a>
+  
+  <div class="nav-links">
+    <a class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" onclick="showPage('browse',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10H3M21 6H3M21 14H3M21 18H3"/></svg>
+      Browse Crops
+    </a>
+    <a class="nav-item" onclick="showPage('negotiate',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3 3v-3z"/></svg>
+      Negotiations <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" onclick="showPage('orders',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
+      Orders
+    </a>
+    <a class="nav-item" onclick="showPage('logistics',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="m16 8 5 2v5h-5V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Logistics
+    </a>
+    <a class="nav-item" onclick="showPage('payment',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      Payments
+    </a>
   </div>
-</div>
 
-<div class="modal fade" id="orderModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-4 border-0 shadow">
-      <div class="modal-header border-0 pb-0"><h5 class="font-serif fw-bold text-success">Place New Order</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body">
-        <div class="row g-3 mb-3">
-          <div class="col-6"><label class="form-label small text-muted fw-bold">Crop</label><select class="form-select rounded-pill bg-light border-0"><option>🍅 Tomato</option><option>🌾 Wheat</option></select></div>
-          <div class="col-6"><label class="form-label small text-muted fw-bold">Qty (kg)</label><input type="number" class="form-control rounded-pill bg-light border-0" placeholder="200"></div>
+  <div class="nav-profile">
+    <div class="notif-btn" onclick="showToast('🔔','No new notifications')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot"></span>
+    </div>
+    <div class="buyer-avatar">SR</div>
+  </div>
+</nav>
+
+<div class="main">
+  
+  <div class="page-header">
+    <h2 class="page-title font-serif" id="pageTitle">Overview</h2>
+    <div class="header-actions">
+      <div class="topbar-search">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search crops, farmers...">
+      </div>
+      <button class="btn-sm btn-primary" onclick="openModal()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        New Order
+      </button>
+    </div>
+  </div>
+
+  <div class="page active" id="page-dashboard">
+    <div class="stats-row">
+      <div class="stat-card glass">
+        <div class="flex-btwn">
+          <div class="stat-icon txt-green" style="background:var(--green-light)">🌾</div>
+          <div class="sub-txt txt-green" style="font-weight:700">↑ 12%</div>
         </div>
-        <div class="mb-4"><label class="form-label small text-muted fw-bold">Notes</label><textarea class="form-control rounded-4 bg-light border-0" rows="3" placeholder="Grade A only..."></textarea></div>
-        <button class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm" data-bs-dismiss="modal" onclick="showToast()">Place Order</button>
+        <div>
+          <div class="stat-val font-serif">₹2.4L</div>
+          <div class="sub-txt">Spent (This Month)</div>
+        </div>
+      </div>
+      <div class="stat-card glass">
+        <div class="flex-btwn">
+          <div class="stat-icon txt-amber" style="background:var(--amber-light)">📦</div>
+          <div class="sub-txt txt-green" style="font-weight:700">↑ 3 today</div>
+        </div>
+        <div>
+          <div class="stat-val font-serif">14</div>
+          <div class="sub-txt">Active Orders</div>
+        </div>
+      </div>
+      <div class="stat-card glass">
+        <div class="flex-btwn">
+          <div class="stat-icon txt-blue" style="background:var(--blue-light)">🤝</div>
+          <div class="sub-txt">Awaiting reply</div>
+        </div>
+        <div>
+          <div class="stat-val font-serif">3</div>
+          <div class="sub-txt">Open Negotiations</div>
+        </div>
+      </div>
+      <div class="stat-card glass">
+        <div class="flex-btwn">
+          <div class="stat-icon txt-red" style="background:var(--red-light)">⏳</div>
+          <div class="sub-txt txt-red" style="font-weight:700">Due 3 days</div>
+        </div>
+        <div>
+          <div class="stat-val font-serif">₹38k</div>
+          <div class="sub-txt">Pending Payments</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hdr flex-btwn"><h3 class="font-serif">Recent Orders</h3><button class="btn-sm btn-outline" onclick="showPage('orders', document.querySelectorAll('.nav-item')[3])">View All</button></div>
+    <div class="table-wrap glass">
+      <table>
+        <thead><tr><th>Order ID</th><th>Crop</th><th>Farmer</th><th>Qty</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel</td><td>200 kg</td><td>₹5,600</td><td><span class="status-pill transit">🚚 Transit</span></td><td><div class="order-actions"><button class="act-btn act-track" onclick="showPage('logistics', document.querySelectorAll('.nav-item')[4])">Track</button></div></td></tr>
+          <tr><td>#FL-2398</td><td>🌾 Wheat</td><td>Suresh Kumar</td><td>500 kg</td><td>₹11,000</td><td><span class="status-pill pending">⏳ Pending</span></td><td><div class="order-actions"><button class="act-btn act-pay" onclick="showPage('payment', document.querySelectorAll('.nav-item')[5])">Pay Now</button></div></td></tr>
+          <tr><td>#FL-2391</td><td>🥔 Potato</td><td>Anita Devi</td><td>300 kg</td><td>₹7,200</td><td><span class="status-pill delivered">✓ Delivered</span></td><td><div class="order-actions"><button class="act-btn act-track">Invoice</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-hdr flex-btwn"><h3 class="font-serif">Market Recommendations</h3><button class="btn-sm btn-outline" onclick="showPage('browse', document.querySelectorAll('.nav-item')[1])">Browse All</button></div>
+    <div class="crop-grid" id="featuredCrops"></div>
+  </div>
+
+  <div class="page" id="page-browse">
+    <div class="filter-bar">
+      <div class="filter-chip active">All Crops</div><div class="filter-chip">🍅 Veg</div><div class="filter-chip">🌾 Grains</div><div class="filter-chip">🍎 Fruit</div>
+      <select class="form-select" style="width:auto; margin-left:auto; border-radius:30px;"><option>Sort: Best Price</option><option>Newest</option></select>
+    </div>
+    <div class="crop-grid" id="browseCrops"></div>
+  </div>
+
+  <div class="page" id="page-negotiate">
+    <p class="page-subtitle">Negotiate prices directly with farmers. Send counter-offers to reach a fair deal.</p>
+    <div class="neg-grid">
+      <div class="neg-card glass">
+        <div class="neg-header flex-btwn"><div><h4 class="font-serif">🌾 Wheat — 500 kg</h4><div class="sub-txt">Suresh Kumar, Ludhiana</div></div><span class="neg-status" style="background:var(--amber-light);color:var(--amber)">Counter</span></div>
+        <div class="neg-row"><span>Listed:</span><strong>₹22/kg</strong></div><div class="neg-row"><span>You:</span><strong>₹19/kg</strong></div><div class="neg-row"><span>Farmer:</span><strong class="txt-amber">₹21/kg</strong></div>
+        <div class="offer-thread"><div class="offer-msg buyer"><div class="bubble">Can you do ₹19/kg?</div><span class="sub-txt">2h ago</span></div><div class="offer-msg farmer"><div class="bubble">Best is ₹21/kg. Grade A.</div><span class="sub-txt">1h ago</span></div></div>
+        <div class="price-input-row"><input class="price-input" placeholder="Offer (₹20/kg)"><button class="btn-send-offer" onclick="sendOffer(this)">Send</button></div>
+      </div>
+      <div class="neg-card glass">
+        <div class="neg-header flex-btwn"><div><h4 class="font-serif">🍅 Tomato — 200 kg</h4><div class="sub-txt">Ramesh Patel, Nashik</div></div><span class="neg-status" style="background:rgba(168,85,247,0.15);color:#9333ea">Awaiting</span></div>
+        <div class="neg-row"><span>Listed:</span><strong>₹30/kg</strong></div><div class="neg-row"><span>You:</span><strong>₹26/kg</strong></div><div class="neg-row"><span>Saving:</span><strong class="txt-green">₹800</strong></div>
+        <div class="offer-thread"><div class="offer-msg buyer"><div class="bubble">Can you offer ₹26/kg for regular orders?</div><span class="sub-txt">3h ago</span></div><div class="offer-msg farmer"><div class="bubble">Let me check stock.</div><span class="sub-txt">2h ago</span></div></div>
+        <div class="price-input-row"><input class="price-input" placeholder="Revise offer"><button class="btn-send-offer" onclick="sendOffer(this)">Send</button></div>
+      </div>
+      <div class="neg-card glass" style="background:rgba(255,255,255,0.9); border-color:rgba(34,197,94,0.3); display:flex; align-items:center; justify-content:center; flex-direction:column; min-height:240px;">
+        <div style="font-size:3rem; filter: drop-shadow(0 0 15px rgba(34,197,94,0.4)); margin-bottom:12px;">🤝</div><strong class="font-serif" style="font-size:1.2rem; color:var(--text);">New Negotiation</strong><p class="sub-txt" style="text-align:center; margin-bottom:16px;">Browse crops and send offers.</p><button class="btn-sm btn-primary" onclick="showPage('browse', document.querySelectorAll('.nav-item')[1])">Browse Marketplace</button>
       </div>
     </div>
   </div>
-</div>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 2000;">
-  <div id="liveToast" class="toast rounded-4 shadow-lg border-0" role="alert">
-    <div class="toast-body d-flex align-items-center gap-2 py-3 px-4 fw-semibold text-dark">
-      <i class="bi bi-check-circle-fill text-success fs-5"></i> Action completed successfully!
+  <div class="page" id="page-orders">
+    <div class="filter-bar"><div class="filter-chip active">All</div><div class="filter-chip">In Transit</div><div class="filter-chip">Delivered</div></div>
+    <div class="table-wrap glass">
+      <table>
+        <thead><tr><th>ID</th><th>Crop</th><th>Farmer</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td>#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel</td><td>22 Jan</td><td>₹5,600</td><td><span class="status-pill transit">🚚 Transit</span></td><td><div class="order-actions"><button class="act-btn act-track" onclick="showPage('logistics', document.querySelectorAll('.nav-item')[4])">Track</button></div></td></tr>
+          <tr><td>#FL-2398</td><td>🌾 Wheat</td><td>Suresh Kumar</td><td>21 Jan</td><td>₹11,000</td><td><span class="status-pill pending">⏳ Pending</span></td><td><div class="order-actions"><button class="act-btn act-pay" onclick="showPage('payment', document.querySelectorAll('.nav-item')[5])">Pay</button></div></td></tr>
+          <tr><td>#FL-2391</td><td>🥔 Potato</td><td>Anita Devi</td><td>18 Jan</td><td>₹7,200</td><td><span class="status-pill delivered">✓ Delivered</span></td><td><div class="order-actions"><button class="act-btn act-track">Invoice</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page" id="page-logistics">
+    <div class="logistics-card glass">
+      <div class="flex-btwn" style="margin-bottom:24px;"><div><h4 class="font-serif" style="font-size:1.2rem; margin-bottom:4px;">#FL-2401 — 🍅 Tomato</h4><div class="sub-txt">Nashik → Mumbai</div></div><span class="status-pill transit">🚚 Transit</span></div>
+      <div class="tracking-steps">
+        <div class="step done"><div class="step-circle">✓</div><div class="step-label">Placed</div></div><div class="step-line done"></div>
+        <div class="step done"><div class="step-circle">✓</div><div class="step-label">Confirmed</div></div><div class="step-line done"></div>
+        <div class="step current"><div class="step-circle">→</div><div class="step-label">Transit</div></div><div class="step-line"></div>
+        <div class="step"><div class="step-circle">4</div><div class="step-label">Delivered</div></div>
+      </div>
+      <div class="logi-meta"><div class="logi-meta-item"><strong>Transporter</strong>AgriFreight</div><div class="logi-meta-item"><strong>Est. Delivery</strong>25 Jan, 2-5 PM</div><div class="logi-meta-item"><strong>Temp</strong>8-12°C</div></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-payment">
+    <div class="pay-grid">
+      <div class="pay-card glass">
+        <h4 class="font-serif">💳 Summary #FL-2398</h4>
+        <div class="pay-row"><span>Crop</span><span class="val">Wheat (500kg)</span></div>
+        <div class="pay-row"><span>Subtotal</span><span class="val">₹10,500</span></div>
+        <div class="pay-row"><span>Logistics</span><span class="val">₹850</span></div>
+        <div class="pay-row"><span>Discount</span><span class="val txt-green">−₹255</span></div>
+        <div class="pay-total"><span>Total</span><span class="txt-green">₹11,200</span></div>
+        <button class="btn-pay-now" onclick="payNow()">Pay Securely</button>
+      </div>
+      <div class="pay-card glass">
+        <h4 class="font-serif">🔒 Method</h4>
+        <div class="payment-methods">
+          <div class="pay-method selected" onclick="selectPay(this)"><span style="font-size:1.6rem">🏦</span><div><div class="pay-method-name">Net Banking</div><div class="sub-txt" style="margin:0">Direct transfer</div></div><div class="pay-radio"></div></div>
+          <div class="pay-method" onclick="selectPay(this)"><span style="font-size:1.6rem">📱</span><div><div class="pay-method-name">UPI</div><div class="sub-txt" style="margin:0">GPay, Paytm</div></div><div class="pay-radio"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 class="font-serif txt-green" style="margin-bottom:24px;">Place Order</h3>
+    <div class="form-row">
+      <div class="form-group"><label class="label-text">CROP</label><select class="form-select"><option>🍅 Tomato</option><option>🌾 Wheat</option></select></div>
+      <div class="form-group"><label class="label-text">QUANTITY</label><input class="form-input" type="number" placeholder="200 kg"></div>
+    </div>
+    <div class="form-group"><label class="label-text">NOTES</label><textarea class="form-textarea" placeholder="Grade A..."></textarea></div>
+    <div class="header-actions" style="justify-content:flex-end; margin-top:32px;">
+      <button class="btn-sm btn-outline" style="border-color:rgba(0,0,0,0.2);color:var(--text-muted);" onclick="closeModal()">Cancel</button>
+      <button class="btn-sm btn-primary" onclick="placeOrder()">Submit Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Completed!</span></div>
+
 <script>
-// Logic to switch pages
 function showPage(id, el) {
-  document.querySelectorAll('.page, .nav-link').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('pageTitle').textContent = {dashboard:'Dashboard',browse:'Browse Crops',negotiate:'Negotiations',orders:'My Orders',logistics:'Logistics Tracking',payment:'Payments'}[id];
+  const titles = {dashboard:'Overview',browse:'Marketplace',negotiate:'Negotiations',orders:'Orders',logistics:'Logistics',payment:'Payments'};
+  document.getElementById('pageTitle').textContent = titles[id];
   if (el) el.classList.add('active');
 }
 
-// Generate minimal cards using Bootstrap grid
 const crops = [
   { n:"Tomato", o:"Ramesh Patel", p:28, em:"🍅", a:"high", q:"500kg" },
   { n:"Wheat", o:"Suresh Kumar", p:21, em:"🌾", a:"high", q:"2 ton" },
@@ -246,26 +469,33 @@ const crops = [
   { n:"Rice", o:"Gurpreet Singh", p:88, em:"🍚", a:"high", q:"1.5 ton" }
 ];
 const buildCard = c => `
-  <div class="col-sm-6 col-lg-3">
-    <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden text-decoration-none" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
-      <div class="crop-img-box">${c.em}<span class="position-absolute bottom-0 start-0 m-2 badge bg-white text-dark shadow-sm border">👨‍🌾 ${c.o}</span></div>
-      <div class="card-body">
-        <h6 class="fw-bold mb-1">${c.n}</h6>
-        <div class="small text-muted mb-3"><i class="bi bi-circle-fill ${c.a==='high'?'text-success':'text-warning'}" style="font-size:0.5rem"></i> ${c.a==='high'?'High':'Limited'} Stock · ${c.q}</div>
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="font-serif fs-5 fw-bold text-success">₹${c.p}<span class="fs-6 fw-normal text-muted font-sans">/kg</span></div>
-          <button class="btn btn-sm btn-light border text-success rounded-pill fw-semibold px-3" onclick="event.stopPropagation(); showToast();">Negotiate</button>
-        </div>
+  <div class="crop-card glass">
+    <div class="crop-img">${c.em}<div class="crop-farmer-tag">👨‍🌾 ${c.o}</div></div>
+    <div class="crop-body">
+      <div class="crop-name">${c.n}</div>
+      <div class="sub-txt" style="margin-bottom:16px;"><span class="availability-dot" style="background:${c.a==='high'?'var(--green)':'var(--amber)'}"></span>${c.a==='high'?'High':'Limited'} Stock · ${c.q}</div>
+      <div class="flex-btwn">
+        <div class="crop-price">₹${c.p}<span>/kg</span></div>
+        <button class="btn-neg" onclick="showToast('💬','Offer sent!')">Negotiate</button>
       </div>
     </div>
   </div>`;
-document.getElementById('featuredCrops').innerHTML = crops.map(buildCard).join('');
-document.getElementById('browseCrops').innerHTML = [...crops, ...crops].map(buildCard).join(''); // Doubled for browse page
+  
+document.getElementById('featuredCrops').innerHTML = crops.map(buildCard).join(''); 
+document.getElementById('browseCrops').innerHTML = [...crops, ...crops].map(buildCard).join('');
 
-// Trigger Bootstrap Toast
-function showToast() {
-  const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-  toast.show();
+document.querySelectorAll('.filter-chip').forEach(c => c.addEventListener('click', () => { c.parentNode.querySelectorAll('.filter-chip').forEach(x => x.classList.remove('active')); c.classList.add('active'); }));
+
+const openModal=()=>document.getElementById('modal').classList.add('open'), closeModal=()=>document.getElementById('modal').classList.remove('open');
+document.getElementById('modal').addEventListener('click', e => e.target.id==='modal'&&closeModal());
+const placeOrder=()=>{ closeModal(); showToast('✅','Order placed!'); }, selectPay=e=>{ document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected')); e.classList.add('selected'); }, payNow=()=>showToast('💳','Payment initiated!'), sendOffer=b=>{ if(!b.previousElementSibling.value.trim()) return showToast('⚠️','Enter price.'); showToast('💬','Offer sent!'); b.previousElementSibling.value=''; };
+
+function showToast(i, m) { 
+  const t=document.getElementById('toast'); 
+  document.getElementById('toastIcon').textContent=i; 
+  document.getElementById('toastMsg').textContent=m; 
+  t.classList.add('show'); 
+  setTimeout(()=>t.classList.remove('show'),3000); 
 }
 </script>
 </body>
