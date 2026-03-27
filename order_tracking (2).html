@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Hub | FarmConnect</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        :root { --farm-green: #28a745; --dark-green: #1a5928; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        
+        .dashboard-card {
+            border: none; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background: #fff; margin-bottom: 20px;
+        }
+        
+        #map { height: 450px; border-radius: 15px; z-index: 1; }
+        
+        /* Tracking Timeline */
+        .step-container { display: flex; justify-content: space-between; position: relative; margin-bottom: 30px; }
+        .step-item { text-align: center; z-index: 2; width: 25%; }
+        .step-icon {
+            width: 40px; height: 40px; border-radius: 50%; background: #ddd;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;
+            color: white; transition: 0.3s;
+        }
+        .step-item.active .step-icon { background: var(--farm-green); box-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
+        .step-line {
+            position: absolute; top: 20px; left: 12%; width: 76%; height: 3px;
+            background: #ddd; z-index: 1;
+        }
+        .step-progress {
+            position: absolute; top: 0; left: 0; height: 100%; width: 65%; /* Simulated Progress */
+            background: var(--farm-green); transition: 1s;
+        }
+
+        .metric-val { font-size: 1.8rem; font-weight: 800; color: var(--dark-green); }
+        .badge-optimized { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-success shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-truck-moving me-2"></i>FarmConnect Logistics Hub</a>
+        <span class="badge badge-optimized p-2"><i class="fas fa-magic me-1"></i> AI Route Optimized</span>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="dashboard-card p-4">
+                <h5 class="fw-bold mb-4">Active Delivery #FC-9921</h5>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0 text-success"><i class="fas fa-map-marker-alt fa-2x"></i></div>
+                    <div class="ms-3">
+                        <small class="text-muted d-block">From</small>
+                        <span class="fw-bold">Green Valley Farm, Nashik</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-4">
+                    <div class="flex-shrink-0 text-danger"><i class="fas fa-store fa-2x"></i></div>
+                    <div class="ms-3">
+                        <small class="text-muted d-block">To</small>
+                        <span class="fw-bold">Fresh Mart, Mumbai Central</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row text-center mt-3">
+                    <div class="col-6 border-end">
+                        <div class="metric-val">12.4kg</div>
+                        <small class="text-muted">CO2 Saved</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="metric-val">42m</div>
+                        <small class="text-muted">Time Saved</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card p-4">
+                <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Driver Details</h6>
+                <div class="d-flex align-items-center mt-3">
+                    <img src="https://i.pravatar.cc/150?img=11" width="50" class="rounded-circle me-3">
+                    <div>
+                        <p class="mb-0 fw-bold">Sam Wilson</p>
+                        <small class="text-muted"><i class="fas fa-star text-warning"></i> 4.9 (120 deliveries)</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success ms-auto"><i class="fas fa-phone"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="dashboard-card p-4">
+                <h5 class="fw-bold mb-4">Live Tracking</h5>
+                
+                <div class="step-container">
+                    <div class="step-line"><div class="step-progress"></div></div>
+                    <div class="step-item active">
+                        <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <small class="fw-bold">Order Placed</small>
+                    </div>
+                    <div class="step-item active">
+                        <div class="step-icon"><i class="fas fa-box"></i></div>
+                        <small class="fw-bold">Picked Up</small>
+                    </div>
+                    <div class="step-item active">
+                        <div class="step-icon"><i class="fas fa-truck"></i></div>
+                        <small class="fw-bold">In Transit</small>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                        <small class="fw-bold text-muted">Delivered</small>
+                    </div>
+                </div>
+
+                <div id="map"></div>
+                
+                <div class="mt-3 text-end">
+                    <button class="btn btn-success" onclick="optimizeRoute()">
+                        <i class="fas fa-sync-alt me-2"></i>Recalculate Smart Route
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Initialize Map (Static View for Demo)
+    var map = L.map('map').setView([19.0760, 72.8777], 10); // Mumbai Coordinates
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Markers for Farm and Store
+    var farmIcon = L.divIcon({className: 'text-success', html: '<i class="fas fa-map-marker-alt fa-2x"></i>', iconSize: [30, 42], iconAnchor: [15, 42]});
+    var storeIcon = L.divIcon({className: 'text-danger', html: '<i class="fas fa-store fa-2x"></i>', iconSize: [30, 42], iconAnchor: [15, 42]});
+    var truckIcon = L.divIcon({className: 'text-primary', html: '<i class="fas fa-truck-moving fa-2x"></i>', iconSize: [30, 42], iconAnchor: [15, 42]});
+
+    L.marker([19.2, 73.0], {icon: farmIcon}).addTo(map).bindPopup("Green Valley Farm");
+    L.marker([19.0, 72.8], {icon: storeIcon}).addTo(map).bindPopup("Fresh Mart");
+    
+    // Truck position
+    var truck = L.marker([19.1, 72.9], {icon: truckIcon}).addTo(map).bindPopup("Delivery in Progress");
+
+    // Polyline representing the route
+    var routeLine = L.polyline([
+        [19.2, 73.0],
+        [19.15, 72.95],
+        [19.1, 72.9],
+        [19.05, 72.85],
+        [19.0, 72.8]
+    ], {color: '#28a745', weight: 5, dashArray: '10, 10'}).addTo(map);
+
+    function optimizeRoute() {
+        alert("Smart Optimization Algorithm Triggered!\n- New route avoids Ghodbunder Road traffic.\n- Fuel savings: +15%\n- ETA updated to 12:45 PM.");
+    }
+</script>
+
+</body>
+</html>
