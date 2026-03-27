@@ -1,0 +1,116 @@
+<div class="order-card">
+    <div class="order-header">
+        <div>
+            <span class="order-id">Order #FC-8821</span>
+            <span class="order-date">Placed on Oct 24, 2023</span>
+        </div>
+        <span class="order-total">$42.50</span>
+    </div>
+
+    <div class="stepper-wrapper">
+        <div class="stepper-item completed">
+            <div class="step-counter">✓</div>
+            <div class="step-name">Order Confirmed</div>
+        </div>
+        <div class="stepper-item active">
+            <div class="step-counter">2</div>
+            <div class="step-name">Picked</div>
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">3</div>
+            <div class="step-name">On the Way</div>
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">4</div>
+            <div class="step-name">Delivered</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .order-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        padding: 2rem;
+        margin-top: 1rem;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .order-id { font-weight: 800; font-size: 1.1rem; display: block; }
+    .order-date { font-size: 0.85rem; color: #64748b; }
+    .order-total { font-weight: 800; color: #064e3b; font-size: 1.2rem; }
+
+    /* --- Stepper Logic --- */
+    .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    /* The horizontal line behind the circles */
+    .stepper-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 5%;
+        right: 5%;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 1;
+    }
+
+    .stepper-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        z-index: 2;
+    }
+
+    .step-counter {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        border: 2px solid #e2e8f0;
+        margin-bottom: 10px;
+        transition: 0.3s;
+    }
+
+    .step-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #94a3b8;
+    }
+
+    /* Completed State (Green) */
+    .stepper-item.completed .step-counter {
+        background: #064e3b;
+        color: white;
+        border-color: #064e3b;
+    }
+    .stepper-item.completed .step-name { color: #064e3b; }
+
+    /* Active/Current State (Orange) */
+    .stepper-item.active .step-counter {
+        background: #f59e0b;
+        color: white;
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 5px #fef3c7;
+    }
+    .stepper-item.active .step-name { color: #f59e0b; font-weight: 800; }
+</style>
