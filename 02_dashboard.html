@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmLink Seller Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --primary-green: #16a34a;
+    --dark-green: #0f3d2e;
+    --header-bg: #14532d;
+    --bg-main: #f6f8fa;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: #333; }
+
+/* 1. HORIZONTAL HEADER (Corrected Placement) */
+.main-header { 
+    height: 75px; background: var(--header-bg); color: white; padding: 0 30px; 
+    display: flex; justify-content: space-between; align-items: center; 
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; box-sizing: border-box; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.header-left { display: flex; align-items: center; gap: 40px; }
+.nav-links { display: flex; gap: 10px; }
+.nav-links a { 
+    padding: 10px 20px; border-radius: 25px; color: #d1fae5; 
+    text-decoration: none; cursor: pointer; font-size: 14px; transition: 0.3s; 
+}
+.nav-links a:hover { background: rgba(255,255,255,0.1); }
+.active-link { background: var(--primary-green) !important; color: white !important; font-weight: 600; }
+
+/* 2. ROUNDED PROFILE PILL (As per image) */
+.profile-pill { 
+    display: flex; align-items: center; gap: 12px; 
+    background: rgba(255,255,255,0.1); padding: 6px 18px 6px 6px; 
+    border-radius: 40px; border: 1px solid rgba(255,255,255,0.2);
+}
+.avatar { 
+    width: 35px; height: 35px; background: #22c55e; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; font-weight: bold; 
+}
+
+/* 3. CONTENT AREA */
+.main { margin-top: 100px; padding: 30px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.section { display: none; animation: fadeIn 0.3s ease; }
+.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 4. COMPONENTS */
+.card { background: white; padding: 20px; border-radius: 16px; box-shadow: var(--card-shadow); border: 1px solid #eee; margin-bottom: 25px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.btn-primary { background: var(--primary-green); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-danger { background: #fee2e2; color: #b91c1c; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: 600; }
+.stock-low { color: #dc2626; font-weight: bold; animation: blink 1.5s infinite; }
+@keyframes blink { 50% { opacity: 0.5; } }
+
+.section-divider { font-size: 14px; font-weight: 600; color: #888; text-transform: uppercase; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
+.section-divider::after { content: ""; flex: 1; height: 1px; background: #ddd; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+.status-badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; background: #f0fdf4; color: #166534; }
+</style>
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-left">
+        <h1 style="font-size: 22px; margin:0;">🌾 FarmLink</h1>
+        <nav class="nav-links">
+            <a class="active-link" onclick="showSection('dashboard', this)">Dashboard</a>
+            <a onclick="showSection('products', this)">Products</a>
+            <a onclick="showSection('customers', this)">Customers</a>
+            <a onclick="showSection('support', this)">Support</a>
+        </nav>
+    </div>
+    <div class="profile-pill">
+        <div class="avatar">SR</div>
+        <div style="font-size: 13px;"><b>Sharma Farms</b><br><span style="font-size:10px; opacity:0.8;">Verified Seller</span></div>
+    </div>
+</header>
+
+<div class="main">
+    
+    <div id="dashboard" class="section active">
+        <h2>Overview</h2>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
+            <div class="card" style="background: linear-gradient(135deg, #0e8354 0%, #16a34a 100%); color: white;">
+                <h4 style="margin:0">Profit Analytics</h4>
+                <canvas id="profitChart" style="max-height: 160px; margin-top:15px;"></canvas>
+            </div>
+            <div class="card" style="text-align:center; display:flex; flex-direction:column; justify-content:center;">
+                <p style="color:#666; margin:0;">Current Profit</p>
+                <h2 style="color:var(--primary-green); margin:10px 0;">₹42,150.00</h2>
+                <button class="btn-primary">Withdraw Profit</button>
+            </div>
+        </div>
+
+        <h3>Top Selling Products</h3>
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="card" style="display:flex; align-items:center; gap:15px; padding:15px;">
+                <i class="lni lni-sprout" style="font-size:24px; color:var(--primary-green);"></i>
+                <div><h4 style="margin:0">Wheat</h4><small>1.2 Tons Sold</small></div>
+            </div>
+            <div class="card" style="display:flex; align-items:center; gap:15px; padding:15px;">
+                <i class="lni lni-apple" style="font-size:24px; color:#ef4444;"></i>
+                <div><h4 style="margin:0">Apples</h4><small>400 Kg Sold</small></div>
+            </div>
+        </div>
+
+        <h3>Recent Sold</h3>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>Product</th><th>Qty Sold</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Organic Tomatoes</td><td>120 kg</td><td>₹4,800</td><td><span class="status-badge">Delivered</span></td></tr>
+                    <tr><td>Basmati Rice</td><td>500 kg</td><td>₹42,500</td><td><span class="status-badge">Delivered</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="products" class="section">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>Inventory Management</h2>
+            <button class="btn-primary" onclick="toggleForm()">+ List New Product</button>
+        </div>
+
+        <div id="productForm" class="card" style="display:none; border: 1px solid var(--primary-green);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <input id="p-name" placeholder="Crop Name" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input id="p-price" placeholder="Price (₹/kg)" type="number" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input id="p-qty" placeholder="Stock Quantity" type="number" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <input type="file" id="p-file" accept="image/*" onchange="previewFile(this)">
+            </div>
+            <button class="btn-primary" style="margin-top:15px" onclick="saveProduct()">Confirm Listing</button>
+        </div>
+
+        <div class="section-divider">Available Product</div>
+        <div id="productList" class="grid"></div>
+    </div>
+
+    <div id="customers" class="section">
+        <h2>Customer Negotiations</h2>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>The Green Bistro (Hotel Chain)</strong>
+                <span style="color:#f59e0b; font-size:12px; font-weight:600;">Pending Offer</span>
+            </div>
+            <p style="font-size:14px; margin:10px 0;">Buyer wants 200kg Potatoes at ₹18/kg</p>
+            <div id="neg-ui" style="display:flex; gap:10px;">
+                <button class="btn-primary" style="flex:1" onclick="finalizeNeg('Accepted')">Accept Offer</button>
+                <button style="flex:1; background:#f1f5f9; border:none; border-radius:8px; cursor:pointer;" onclick="finalizeNeg('Rejected')">Reject</button>
+            </div>
+            <div id="neg-msg" style="margin-top:15px; font-weight:600; color:var(--primary-green); display:none;"></div>
+        </div>
+    </div>
+
+    <div id="support" class="section">
+        <h2>Help & Support</h2>
+        <div class="grid">
+            <div class="card"><h4>FAQs</h4><p>How to track logistics.</p></div>
+            <div class="card"><h4>Live Support</h4><button class="btn-primary">Chat Now</button></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSection(id, element) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active-link'));
+    element.classList.add('active-link');
+}
+
+let products = [
+    { id: 1, name: "Organic Tomatoes", price: 40, qty: 120, img: "https://via.placeholder.com/200?text=Tomatoes" },
+    { id: 2, name: "Basmati Rice", price: 85, qty: 30, img: "https://via.placeholder.com/200?text=Rice" }
+];
+
+let uploadedImg = "";
+function toggleForm() { const f = document.getElementById('productForm'); f.style.display = f.style.display === 'none' ? 'block' : 'none'; }
+function previewFile(input) { const reader = new FileReader(); reader.onload = (e) => uploadedImg = e.target.result; reader.readAsDataURL(input.files[0]); }
+
+function saveProduct() {
+    const name = document.getElementById('p-name').value;
+    const price = document.getElementById('p-price').value;
+    const qty = document.getElementById('p-qty').value;
+    if(!name || !price) return;
+    products.push({ id: Date.now(), name, price, qty, img: uploadedImg || "https://via.placeholder.com/200" });
+    renderProducts();
+    toggleForm();
+}
+
+function removeProduct(id) {
+    products = products.filter(p => p.id !== id);
+    renderProducts();
+}
+
+function renderProducts() {
+    let h = '';
+    products.forEach(p => {
+        const stockClass = p.qty < 50 ? 'stock-low' : '';
+        h += `<div class="card" style="text-align:center; padding:15px;">
+            <img src="${p.img}" style="width:100%; height:120px; object-fit:cover; border-radius:10px;">
+            <h4 style="margin:10px 0 5px;">${p.name}</h4>
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span>₹${p.price}/kg</span><span class="${stockClass}">${p.qty}kg</span>
+            </div>
+            <button class="btn-danger" onclick="removeProduct(${p.id})">Remove</button>
+        </div>`;
+    });
+    document.getElementById('productList').innerHTML = h;
+}
+
+function finalizeNeg(status) {
+    document.getElementById('neg-ui').style.display = 'none';
+    const msg = document.getElementById('neg-msg');
+    msg.style.display = 'block';
+    msg.innerText = status === 'Accepted' ? "This offer has been accepted and added to orders." : "Offer rejected.";
+    if(status === 'Rejected') msg.style.color = "#b91c1c";
+}
+
+const ctx = document.getElementById('profitChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{ data: [15, 22, 18, 30, 28, 42], borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)', fill: true, tension: 0.4 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: 'white' }, grid: { display: false } }, y: { display: false } } }
+});
+
+renderProducts();
+</script>
+</body>
+</html>
