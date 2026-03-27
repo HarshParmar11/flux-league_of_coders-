@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisan Connect - Farm-to-Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Background setup */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .bg-image {
+            background-image: url('https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=1920'); 
+            background-color: rgba(15, 23, 42, 0.6); 
+            background-blend-mode: overlay;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-image 0.8s ease-in-out; 
+        }
+
+        /* Glassmorphism Card Effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.55);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px; 
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 550px; 
+            color: #ffffff;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-height: 95vh;
+            overflow-y: auto; 
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Input Styling */
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.06); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 30px; 
+            padding: 0.8rem 1.5rem; 
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-select option {
+            background-color: #1e293b; 
+            color: white;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-color: #22c55e;
+            color: white;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); 
+        }
+
+        .form-control::placeholder {
+            color: #cbd5e1;
+            opacity: 0.8;
+        }
+
+        /* Role Selection Buttons */
+        .custom-btn-group {
+            display: flex;
+            gap: 15px; 
+            justify-content: center;
+        }
+
+        .btn-outline-success {
+            color: #a7f3d0;
+            border-color: rgba(34, 197, 94, 0.5);
+            border-radius: 30px !important; 
+            padding: 0.6rem 1.5rem;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check:checked + .btn-outline-success {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3); 
+        }
+
+        /* Rounded Buttons */
+        .btn-success {
+            border-radius: 30px;
+            padding: 0.8rem;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+        }
+
+        .brand-text {
+            color: #22c55e;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .text-muted-custom {
+            color: #cbd5e1 !important;
+        }
+        
+        a {
+            color: #22c55e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        a:hover {
+            color: #4ade80;
+        }
+        
+        /* Custom Scrollbars */
+        .glass-card::-webkit-scrollbar, .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .glass-card::-webkit-scrollbar-thumb, .modal-body::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* Smooth Transitions */
+        .smooth-transition {
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.4s ease-in-out, 
+                        margin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 250px; 
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .smooth-transition.hidden-state {
+            max-height: 0 !important;
+            opacity: 0 !important;
+            margin-bottom: 0 !important;
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            pointer-events: none; 
+        }
+
+        /* Modal Customization to match theme */
+        .modal-content.glass-modal {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(15px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image" id="mainBackground">
+        <div class="glass-card">
+            
+            <div class="text-center mb-4">
+                <h2 class="brand-text mb-1">🌾 Kisan Connect</h2>
+                <h4 class="mb-2" id="headerTitle" style="font-weight: 300;">Join Our Marketplace</h4>
+                <p class="text-muted-custom small" id="dynamicSubtext">Get the best prices for your harvest, directly.</p>
+            </div>
+
+            <form id="registrationForm">
+                
+                <div class="mb-4">
+                    <label class="form-label text-muted-custom small mb-3 d-block text-center" style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem;">I am a</label>
+                    <div class="custom-btn-group w-100" role="group">
+                        <input type="radio" class="btn-check role-selector" name="userRole" id="roleFarmer" value="farmer" autocomplete="off" checked>
+                        <label class="btn btn-outline-success" for="roleFarmer">Farmer</label>
+                      
+                        <input type="radio" class="btn-check role-selector" name="userRole" id="roleBuyer" value="buyer" autocomplete="off">
+                        <label class="btn btn-outline-success" for="roleBuyer">Buyer / Business</label>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3 smooth-transition signup-only">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                    </div>
+                </div>
+
+                <div id="dynamicDetailsArea" class="smooth-transition signup-only">
+                    <div id="farmerFields" class="smooth-transition">
+                        <div class="mb-3">
+                            <input type="text" class="form-control farmer-input" id="farmAddress" placeholder="Village / Farm Location" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" class="form-control farmer-input" id="farmSize" placeholder="Farm Size (in Acres)" required>
+                        </div>
+                    </div>
+
+                    <div id="buyerFields" class="smooth-transition hidden-state">
+                        <div class="mb-3">
+                            <input type="text" class="form-control buyer-input" id="businessName" placeholder="Business / Restaurant Name">
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select buyer-input" id="businessType">
+                                <option value="" selected disabled>Select Business Type</option>
+                                <option value="restaurant">Restaurant / Cafe</option>
+                                <option value="grocery">Grocery Store</option>
+                                <option value="wholesale">Wholesale Distributor</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <input type="tel" class="form-control" id="mobileNumber" placeholder="10-Digit Mobile Number" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="password" placeholder="Password (Min 6 chars)" minlength="6" required>
+                </div>
+
+                <div class="form-check mb-4 mt-4 ps-4 smooth-transition signup-only">
+                    <input class="form-check-input mt-1" type="checkbox" value="" id="termsCheck" required style="margin-left: -1.5rem;">
+                    <label class="form-check-label small text-muted-custom" for="termsCheck">
+                        I have read and agree to the 
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Kisan Connect Terms of Service and Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <button type="submit" id="mainSubmitBtn" class="btn btn-success w-100 py-2 mb-4 fw-bold">Create Account</button>
+
+                <div class="text-center small" style="opacity: 0.9;">
+                    <span id="togglePrefixText">Already have an account?</span> 
+                    <a href="#" id="toggleModeLink" class="fw-bold">Log in here</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content glass-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title brand-text" id="termsModalLabel">Terms of Service & Privacy Policy</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-muted-custom" style="font-size: 0.9rem; line-height: 1.6;">
+                    <h6 class="text-white mb-2">1. Introduction</h6>
+                    <p>Welcome to Kisan Connect. By registering as either a Farmer or a Buyer, you agree to abide by the rules of this marketplace. Our goal is to facilitate direct, fair, and transparent trade.</p>
+
+                    <h6 class="text-white mt-4 mb-2">2. User Responsibilities</h6>
+                    <p><strong>Farmers:</strong> You agree to provide accurate information regarding the type, quantity, and quality of your harvest. Misrepresentation of crop yield or use of unverified chemicals may result in platform suspension.</p>
+                    <p><strong>Buyers:</strong> You agree to negotiate in good faith and honor accepted price agreements. Payment must be initiated securely through the platform upon logistics confirmation.</p>
+
+                    <h6 class="text-white mt-4 mb-2">3. Transactions & Logistics</h6>
+                    <p>Kisan Connect acts solely as a technological facilitator. While we provide tools for price negotiation and logistics tracking, the final contract of sale is strictly between the Farmer and the Buyer. Kisan Connect is not liable for spoiled goods during third-party transit.</p>
+
+                    <h6 class="text-white mt-4 mb-2">4. Data Privacy</h6>
+                    <p>Your personal data, including farm locations and business addresses, are stored securely. We do not sell your personal data to third-party marketing agencies. Transactional data may be used anonymously to provide market price trends to the community.</p>
+
+                    <p class="mt-4 text-center small"><em>*Note: This is a prototype application built for demonstration purposes. No real monetary transactions will occur.</em></p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Decline</button>
+                    <button type="button" class="btn btn-success rounded-pill px-4" id="acceptTermsBtn">I Accept the Terms</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Image URLs
+        const imgFarmer = "url('https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg?auto=compress&cs=tinysrgb&w=1920')";
+        const imgBuyer = "url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=2070&q=80')";
+
+        // Elements
+        const bgContainer = document.getElementById('mainBackground');
+        const roleSelectors = document.querySelectorAll('.role-selector');
+        const farmerFields = document.getElementById('farmerFields');
+        const buyerFields = document.getElementById('buyerFields');
+        const dynamicSubtext = document.getElementById('dynamicSubtext');
+        const headerTitle = document.getElementById('headerTitle');
+        const mainSubmitBtn = document.getElementById('mainSubmitBtn');
+        const termsCheck = document.getElementById('termsCheck');
+        const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+        
+        // Input validation toggles
+        const farmerInputs = document.querySelectorAll('.farmer-input');
+        const buyerInputs = document.querySelectorAll('.buyer-input');
+
+        // State Tracking
+        let isLoginMode = false;
+
+        // --- TERMS MODAL LOGIC ---
+        acceptTermsBtn.addEventListener('click', function() {
+            // Check the box physically
+            termsCheck.checked = true;
+            
+            // Hide the modal using Bootstrap's API
+            const modalElement = document.getElementById('termsModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+        });
+
+        // --- ROLE TOGGLE LOGIC ---
+        function updateRoleView() {
+            const selectedRole = document.querySelector('input[name="userRole"]:checked').value;
+            
+            if (selectedRole === 'buyer') {
+                bgContainer.style.backgroundImage = imgBuyer;
+                farmerFields.classList.add('hidden-state');
+                buyerFields.classList.remove('hidden-state');
+                
+                if(!isLoginMode) {
+                    dynamicSubtext.innerText = "Source the freshest produce directly from local farms.";
+                    farmerInputs.forEach(input => input.removeAttribute('required'));
+                    buyerInputs.forEach(input => input.setAttribute('required', 'true'));
+                }
+            } else {
+                bgContainer.style.backgroundImage = imgFarmer;
+                buyerFields.classList.add('hidden-state');
+                farmerFields.classList.remove('hidden-state');
+                
+                if(!isLoginMode) {
+                    dynamicSubtext.innerText = "Get the best prices for your harvest, directly.";
+                    buyerInputs.forEach(input => input.removeAttribute('required'));
+                    farmerInputs.forEach(input => input.setAttribute('required', 'true'));
+                }
+            }
+        }
+
+        roleSelectors.forEach(radio => {
+            radio.addEventListener('change', updateRoleView);
+        });
+
+        // --- LOGIN / SIGNUP TOGGLE LOGIC ---
+        const toggleModeLink = document.getElementById('toggleModeLink');
+        const togglePrefixText = document.getElementById('togglePrefixText');
+        const signupOnlyElements = document.querySelectorAll('.signup-only');
+
+        toggleModeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+
+            if (isLoginMode) {
+                // Smoothly hide Signup fields
+                signupOnlyElements.forEach(el => el.classList.add('hidden-state'));
+                
+                // Update Text
+                headerTitle.innerText = "Welcome Back";
+                dynamicSubtext.innerText = "Log in to access your dashboard.";
+                mainSubmitBtn.innerText = "Log In";
+                togglePrefixText.innerText = "Don't have an account?";
+                toggleModeLink.innerText = "Sign up here";
+
+                // Remove required tags so login form can submit
+                document.getElementById('firstName').removeAttribute('required');
+                document.getElementById('lastName').removeAttribute('required');
+                termsCheck.removeAttribute('required');
+                farmerInputs.forEach(input => input.removeAttribute('required'));
+                buyerInputs.forEach(input => input.removeAttribute('required'));
+
+            } else {
+                // Smoothly reveal Signup fields
+                signupOnlyElements.forEach(el => el.classList.remove('hidden-state'));
+                
+                // Update Text
+                headerTitle.innerText = "Join Our Marketplace";
+                mainSubmitBtn.innerText = "Create Account";
+                togglePrefixText.innerText = "Already have an account?";
+                toggleModeLink.innerText = "Log in here";
+
+                // Restore required tags
+                document.getElementById('firstName').setAttribute('required', 'true');
+                document.getElementById('lastName').setAttribute('required', 'true');
+                termsCheck.setAttribute('required', 'true');
+                
+                updateRoleView(); 
+            }
+        });
+
+        // --- FORM SUBMISSION ---
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const selectedRole = document.querySelector('input[name="userRole"]:checked').value;
+            const action = isLoginMode ? "Logging In" : "Registering";
+            console.log(`${action} as: ${selectedRole}`);
+            alert(`${action} successful! Handing off to Firebase...`);
+        });
+    </script>
+</body>
+</html>
