@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | FarmConnect</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body { 
+            overflow-x: hidden; 
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        } 
+        
+        /* Language Picker */
+        .lang-picker-container {
+            position: fixed;
+            top: 20px;
+            right: 40px;
+            z-index: 1001;
+        }
+        .lang-select {
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 2px solid #28a745;
+            background: rgba(255,255,255,0.95);
+            font-weight: 700;
+            color: #1a5928;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Hero */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .section-title { font-weight: 800; position: relative; display: inline-block; margin-bottom: 50px; }
+        .section-title::after {
+            content: ''; width: 50%; height: 4px; background: #28a745;
+            position: absolute; bottom: -12px; left: 0; border-radius: 2px;
+        }
+
+        /* Features */
+        .feature-card {
+            padding: 40px 25px; border-radius: 20px; border: 1px solid #eee !important;
+            transition: 0.4s; background: #ffffff; height: 100%;
+        }
+        .feature-card:hover { transform: translateY(-10px); border-color: #28a745 !important; box-shadow: 0 20px 40px rgba(0,0,0,0.08)!important; }
+        .feature-icon { font-size: 3rem; color: #28a745; margin-bottom: 1.5rem; }
+
+        /* Team */
+        .team-img {
+            width: 150px; height: 150px; object-fit: cover;
+            border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.4s ease;
+        }
+
+        /* Manifesto Styles */
+        .modal-content { border-radius: 25px; border: none; overflow: hidden; }
+        .modal-header { background: #1a8754; color: white; border: none; }
+        .btn-close-white { filter: brightness(0) invert(1); }
+
+        .btn-manifesto {
+            background-color: #1a8754;
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-manifesto:hover { background-color: #146c43; color: white; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="lang-picker-container">
+        <select class="lang-select" id="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English 🇺🇸</option>
+            <option value="hi">Hindi 🇮🇳</option>
+        </select>
+    </div>
+
+    <header class="hero-section text-center">
+        <div class="container" data-aos="zoom-out">
+            <h1 class="display-3 fw-bold" data-i18n="hero_title">Connecting the Roots</h1>
+            <p class="fs-4 opacity-75" data-i18n="hero_sub">Eliminating Middlemen. Delivering Freshness. Maximizing Profit.</p>
+        </div>
+    </header>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="section-title text-dark mb-4" data-i18n="vision_title">Our Vision</h2>
+                    <p class="fs-4 fw-bold mb-4" data-i18n="vision_lead" style="color: #2d2d2d;">
+                        We are dismantling the outdated supply chain to empower local producers.
+                    </p>
+                    <p class="text-muted fs-5 mb-4" data-i18n="vision_text">
+                        By leveraging real-time logistics coordination and a secure payment gateway, we ensure farmers receive fair value while stores receive peak-freshness produce.
+                    </p>
+                    <button class="btn btn-manifesto shadow-sm" data-bs-toggle="modal" data-bs-target="#manifestoModal" data-i18n="btn_manifesto">
+                        Read Full Manifesto
+                    </button>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=800" class="img-fluid rounded-4 shadow-lg" alt="Vision">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="manifestoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header px-4 py-3">
+                    <h5 class="modal-title fw-bold" data-i18n="modal_title">Our Strategic Manifesto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 p-lg-5">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-success"><i class="fas fa-seedling me-2"></i>Vocal for Local</h5>
+                            <p class="text-muted" data-i18n="modal_p1">We boost local economies by removing intermediaries, giving 30-40% more profit to regional farmers.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-success"><i class="fas fa-shield-alt me-2"></i>Absolute Transparency</h5>
+                            <p class="text-muted" data-i18n="modal_p2">Every transaction is secured via escrow. Payments are released only upon successful delivery verification.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-success"><i class="fas fa-truck-loading me-2"></i>Zero-Waste Logistics</h5>
+                            <p class="text-muted" data-i18n="modal_p3">Our smart routing reduces travel time by 50%, ensuring freshness and reducing environmental impact.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-success"><i class="fas fa-microchip me-2"></i>Agri-Tech Future</h5>
+                            <p class="text-muted" data-i18n="modal_p4">We use AI to predict market demand, helping farmers grow what sells and eliminating over-supply waste.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-5 bg-white">
+        <div class="container text-center">
+            <h2 class="section-title" data-aos="fade-up" data-i18n="platform_title">Platform Capabilities</h2>
+            <div class="row g-4 mt-2">
+                <div class="col-md-3" data-aos="flip-left">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-leaf feature-icon"></i>
+                        <h5 class="fw-bold" data-i18n="feat_1_title">Direct Listings</h5>
+                        <p class="text-muted small" data-i18n="feat_1_text">Farmers post crops directly to the marketplace.</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="flip-left" data-aos-delay="100">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-handshake feature-icon"></i>
+                        <h5 class="fw-bold" data-i18n="feat_2_title">Negotiation</h5>
+                        <p class="text-muted small" data-i18n="feat_2_text">Real-time bidding tools for fair market pricing.</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="flip-left" data-aos-delay="200">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-truck feature-icon"></i>
+                        <h5 class="fw-bold" data-i18n="feat_3_title">Logistics</h5>
+                        <p class="text-muted small" data-i18n="feat_3_text">Smart tracking for perishable goods.</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="flip-left" data-aos-delay="300">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-credit-card feature-icon"></i>
+                        <h5 class="fw-bold" data-i18n="feat_4_title">Secure Pay</h5>
+                        <p class="text-muted small" data-i18n="feat_4_text">Escrow-based payments for total security.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="section-title" data-aos="fade-up" data-i18n="team_title">Meet Our Team</h2>
+            <div class="row g-5 mt-2 justify-content-center">
+                <div class="col-md-4 team-item" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://i.pravatar.cc/300?img=12" class="rounded-circle team-img mb-4" alt="Robert">
+                    <h4 class="fw-bold">Robert</h4>
+                    <p class="text-success fw-bold text-uppercase small" data-i18n="role_dev">Lead Developer</p>
+                </div>
+                <div class="col-md-4 team-item" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://i.pravatar.cc/300?img=5" class="rounded-circle team-img mb-4" alt="Sarah Chen">
+                    <h4 class="fw-bold">Sarah Chen</h4>
+                    <p class="text-success fw-bold text-uppercase small" data-i18n="role_ui">UI Designer</p>
+                </div>
+                <div class="col-md-4 team-item" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://i.pravatar.cc/300?img=11" class="rounded-circle team-img mb-4" alt="Sam Wilson">
+                    <h4 class="fw-bold">Sam Wilson</h4>
+                    <p class="text-success fw-bold text-uppercase small" data-i18n="role_log">Logistics Lead</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="opacity-75 mb-0" data-i18n="footer_text">Empowering Agriculture through Digital Innovation</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        const translations = {
+            en: {
+                hero_title: "Connecting the Roots", hero_sub: "Eliminating Middlemen. Delivering Freshness.",
+                vision_title: "Our Vision", vision_lead: "Dismantling outdated supply chains to empower local producers.",
+                vision_text: "Ensuring farmers receive fair value via smart logistics and secure payments.",
+                btn_manifesto: "Read Full Manifesto", platform_title: "Platform Capabilities",
+                feat_1_title: "Direct Listings", feat_1_text: "Farmers post crops directly to the marketplace.",
+                feat_2_title: "Negotiation", feat_2_text: "Real-time bidding tools for fair pricing.",
+                feat_3_title: "Logistics", feat_3_text: "Smart tracking for perishable goods.",
+                feat_4_title: "Secure Pay", feat_4_text: "Escrow-based payments for total security.",
+                team_title: "Meet Our Team", role_dev: "Lead Developer", role_ui: "UI Designer", role_log: "Logistics Lead",
+                modal_title: "Our Strategic Manifesto",
+                modal_p1: "We boost local economies by removing intermediaries, giving 30-40% more profit to regional farmers.",
+                modal_p2: "Every transaction is secured via escrow. Payments are released only upon successful delivery verification.",
+                modal_p3: "Our smart routing reduces travel time by 50%, ensuring freshness and reducing environmental impact.",
+                modal_p4: "We use AI to predict market demand, helping farmers grow what sells and eliminating over-supply waste.",
+                footer_text: "Empowering Agriculture through Digital Innovation"
+            },
+            hi: {
+                hero_title: "जड़ों को जोड़ना", hero_sub: "बिचौलियों को खत्म करना। ताजगी पहुंचाना।",
+                vision_title: "हमारा दृष्टिकोण", vision_lead: "स्थानीय उत्पादकों को सशक्त बनाने के लिए पुरानी आपूर्ति श्रृंखला को खत्म करना।",
+                vision_text: "स्मार्ट लॉजिस्टिक्स और सुरक्षित भुगतान के माध्यम से किसानों को उचित मूल्य सुनिश्चित करना।",
+                btn_manifesto: "पूर्ण घोषणापत्र पढ़ें", platform_title: "प्लेटफार्म क्षमताएं",
+                feat_1_title: "सीधी लिस्टिंग", feat_1_text: "किसान सीधे बाज़ार में फसल पोस्ट करते हैं।",
+                feat_2_title: "मोलभाव", feat_2_text: "उचित मूल्य निर्धारण के लिए रीयल-टाइम बोली उपकरण।",
+                feat_3_title: "लॉजिस्टिक्स", feat_3_text: "खराब होने वाली वस्तुओं की स्मार्ट ट्रैकिंग।",
+                feat_4_title: "सुरक्षित भुगतान", feat_4_text: "पूर्ण सुरक्षा के लिए एस्क्रो-आधारित भुगतान।",
+                team_title: "हमारी टीम", role_dev: "प्रमुख डेवलपर", role_ui: "यूआई डिजाइनर", role_log: "लॉजिस्टिक्स प्रमुख",
+                modal_title: "हमारा रणनीतिक घोषणापत्र",
+                modal_p1: "हम बिचौलियों को हटाकर स्थानीय अर्थव्यवस्था को बढ़ावा देते हैं, जिससे क्षेत्रीय किसानों को 30-40% अधिक लाभ मिलता है।",
+                modal_p2: "प्रत्येक लेनदेन एस्क्रो के माध्यम से सुरक्षित है। भुगतान सफल डिलीवरी सत्यापन के बाद ही जारी किए जाते हैं।",
+                modal_p3: "हमारा स्मार्ट रूटिंग यात्रा के समय को 50% तक कम कर देता है, जिससे ताजगी सुनिश्चित होती है।",
+                modal_p4: "हम बाजार की मांग का अनुमान लगाने के लिए AI का उपयोग करते हैं, जिससे किसानों को सही फसल उगाने में मदद मिलती है।",
+                footer_text: "डिजिटल नवाचार के माध्यम से कृषि को सशक्त बनाना"
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('preferredLang', lang);
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        window.onload = () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'en';
+            document.getElementById('lang-select').value = savedLang;
+            changeLanguage(savedLang);
+            AOS.init({ duration: 1000 });
+        };
+    </script>
+</body>
+</html>
