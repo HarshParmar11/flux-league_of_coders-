@@ -3,1171 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FarmLink — Buyer Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>FarmLink — Minimal Buyer Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --green:       #1c6b3a;
-  --green-mid:   #2d8f54;
-  --green-light: #e6f5ed;
-  --amber:       #d97706;
-  --amber-light: #fef3c7;
-  --red:         #dc2626;
-  --red-light:   #fee2e2;
-  --blue:        #1d4ed8;
-  --blue-light:  #eff6ff;
-  --text:        #111827;
-  --text-2:      #374151;
-  --text-muted:  #6b7280;
-  --border:      #e5e7eb;
-  --bg:          #f9fafb;
-  --card:        #ffffff;
-  --sidebar-w:   240px;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  min-height: 100vh;
-}
-
-/* ── SIDEBAR ── */
-.sidebar {
-  width: var(--sidebar-w);
-  background: #0f3d22;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  left: 0; top: 0; bottom: 0;
-  z-index: 50;
-}
-.sidebar-logo {
-  padding: 24px 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.sidebar-logo h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-.sidebar-logo h1 span { color: #6ee7a0; }
-.sidebar-logo p { font-size: 0.68rem; color: rgba(255,255,255,0.45); margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; }
-
-.sidebar-section-label {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
-  padding: 18px 20px 6px;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  color: rgba(255,255,255,0.6);
-  font-size: 0.84rem;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 0;
-  transition: all 0.16s;
-  position: relative;
-  text-decoration: none;
-}
-.nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
-.nav-item.active {
-  color: #fff;
-  background: rgba(110,231,160,0.12);
-}
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 4px; bottom: 4px;
-  width: 3px;
-  background: #6ee7a0;
-  border-radius: 0 3px 3px 0;
-}
-.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-.nav-badge {
-  margin-left: auto;
-  background: #d97706;
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 10px;
-}
-
-.sidebar-bottom {
-  margin-top: auto;
-  padding: 16px 20px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-.buyer-profile {
-  display: flex; align-items: center; gap: 10px;
-}
-.buyer-avatar {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, #6ee7a0, #2d8f54);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem; font-weight: 700; color: #0f3d22;
-}
-.buyer-info strong { font-size: 0.8rem; color: #fff; display: block; }
-.buyer-info span { font-size: 0.68rem; color: rgba(255,255,255,0.4); }
-
-/* ── MAIN ── */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── TOPBAR ── */
-.topbar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: sticky; top: 0; z-index: 40;
-}
-.topbar h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text);
-}
-.topbar-search {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 6px 12px;
-  min-width: 220px;
-}
-.topbar-search input {
-  border: none; background: transparent;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.82rem; outline: none; color: var(--text);
-  width: 100%;
-}
-.topbar-search input::placeholder { color: var(--text-muted); }
-.topbar-search svg { color: var(--text-muted); width: 14px; height: 14px; flex-shrink: 0; }
-
-.notif-btn {
-  position: relative; cursor: pointer;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px;
-  display: flex; align-items: center;
-  transition: background 0.15s;
-}
-.notif-btn:hover { background: var(--green-light); }
-.notif-btn svg { width: 16px; height: 16px; color: var(--text-2); }
-.notif-dot {
-  position: absolute; top: 5px; right: 5px;
-  width: 7px; height: 7px;
-  background: var(--red); border-radius: 50%;
-  border: 1.5px solid white;
-}
-
-/* ── PAGE CONTENT ── */
-.page { padding: 28px; display: none; }
-.page.active { display: block; }
-
-/* ── STATS ROW ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  transition: box-shadow 0.18s;
-}
-.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-.stat-icon {
-  width: 42px; height: 42px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-.stat-icon.green { background: var(--green-light); }
-.stat-icon.amber { background: var(--amber-light); }
-.stat-icon.blue  { background: var(--blue-light); }
-.stat-icon.red   { background: var(--red-light); }
-.stat-val {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-.stat-label { font-size: 0.74rem; color: var(--text-muted); margin-top: 3px; }
-.stat-change { font-size: 0.7rem; font-weight: 600; margin-top: 4px; }
-.stat-change.up { color: var(--green-mid); }
-.stat-change.down { color: var(--red); }
-
-/* ── SECTION HEADER ── */
-.sec-hdr {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-.sec-hdr h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.05rem; font-weight: 700;
-}
-.btn-sm {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.78rem; font-weight: 600;
-  padding: 6px 14px; border-radius: 7px;
-  cursor: pointer; border: none;
-  transition: all 0.16s;
-}
-.btn-primary { background: var(--green); color: #fff; }
-.btn-primary:hover { background: var(--green-mid); }
-.btn-outline {
-  background: none;
-  border: 1.5px solid var(--border);
-  color: var(--text-2);
-}
-.btn-outline:hover { border-color: var(--green); color: var(--green); }
-
-/* ── PRODUCT GRID ── */
-.crop-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.crop-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s;
-  position: relative;
-}
-.crop-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-.crop-img {
-  width: 100%; height: 120px;
-  background: var(--green-light);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 3rem;
-  position: relative;
-}
-.crop-farmer-tag {
-  position: absolute;
-  bottom: 8px; left: 8px;
-  background: rgba(15,61,34,0.85);
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-  backdrop-filter: blur(4px);
-}
-.crop-body { padding: 12px 14px 14px; }
-.crop-name {
-  font-weight: 700; font-size: 0.9rem; margin-bottom: 2px;
-}
-.crop-origin { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; }
-.crop-price-row {
-  display: flex; align-items: center; justify-content: space-between;
-}
-.crop-price {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem; font-weight: 700; color: var(--green);
-}
-.crop-price span { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
-.crop-orig { font-size: 0.7rem; color: var(--text-muted); text-decoration: line-through; }
-
-.disc-tag {
-  position: absolute; top: 10px; right: 10px;
-  background: var(--green);
-  color: #fff; font-size: 0.62rem; font-weight: 700;
-  padding: 3px 7px; border-radius: 6px;
-}
-.availability-dot {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  margin-right: 4px;
-}
-.avail-high { background: #22c55e; }
-.avail-med  { background: #f59e0b; }
-.avail-low  { background: #ef4444; }
-.crop-avail { font-size: 0.7rem; color: var(--text-muted); margin-top: 6px; }
-
-.btn-neg {
-  font-size: 0.75rem; font-weight: 600;
-  padding: 5px 12px; border-radius: 7px;
-  border: 1.5px solid var(--green);
-  color: var(--green); background: none;
-  cursor: pointer; transition: all 0.15s;
-}
-.btn-neg:hover { background: var(--green); color: #fff; }
-
-/* ── FILTER BAR ── */
-.filter-bar {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-bottom: 18px; align-items: center;
-}
-.filter-chip {
-  padding: 6px 14px; border-radius: 100px;
-  border: 1px solid var(--border);
-  font-size: 0.78rem; font-weight: 600;
-  color: var(--text-muted); background: var(--card);
-  cursor: pointer; transition: all 0.15s;
-}
-.filter-chip:hover, .filter-chip.active {
-  background: var(--green); color: #fff; border-color: var(--green);
-}
-.filter-select {
-  margin-left: auto;
-  padding: 6px 12px; border-radius: 8px;
-  border: 1px solid var(--border); font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.78rem; color: var(--text-2); background: var(--card);
-  outline: none; cursor: pointer;
-}
-
-/* ── ORDERS TABLE ── */
-.table-wrap {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden; margin-bottom: 28px;
-}
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: #f3f4f6; }
-th {
-  text-align: left; padding: 11px 16px;
-  font-size: 0.72rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--text-muted); border-bottom: 1px solid var(--border);
-}
-td {
-  padding: 13px 16px; font-size: 0.82rem;
-  border-bottom: 1px solid #f3f4f6; color: var(--text-2);
-}
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: #fafafa; }
-
-.status-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px; border-radius: 100px;
-  font-size: 0.72rem; font-weight: 700;
-}
-.status-pill.delivered { background: var(--green-light); color: var(--green); }
-.status-pill.transit   { background: var(--blue-light);  color: var(--blue); }
-.status-pill.pending   { background: var(--amber-light); color: var(--amber); }
-.status-pill.negotiate { background: #f3e8ff; color: #7c3aed; }
-
-.order-actions { display: flex; gap: 6px; }
-.act-btn {
-  padding: 4px 10px; border-radius: 6px; border: none;
-  font-size: 0.72rem; font-weight: 600; cursor: pointer;
-  transition: opacity 0.15s;
-}
-.act-btn:hover { opacity: 0.8; }
-.act-track { background: var(--blue-light); color: var(--blue); }
-.act-pay   { background: var(--green-light); color: var(--green); }
-.act-neg   { background: #f3e8ff; color: #7c3aed; }
-
-/* ── NEGOTIATION PANEL ── */
-.neg-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-  margin-bottom: 28px;
-}
-.neg-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px;
-}
-.neg-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-.neg-header h4 { font-size: 0.9rem; font-weight: 700; }
-.neg-status { font-size: 0.7rem; font-weight: 600; padding: 3px 9px; border-radius: 100px; }
-.neg-status.open   { background: #f3e8ff; color: #7c3aed; }
-.neg-status.counter{ background: var(--amber-light); color: var(--amber); }
-.neg-row {
-  display: flex; justify-content: space-between;
-  font-size: 0.8rem; color: var(--text-muted);
-  margin-bottom: 8px;
-}
-.neg-row strong { color: var(--text); }
-.price-input-row {
-  display: flex; gap: 8px; margin-top: 12px; align-items: center;
-}
-.price-input {
-  flex: 1; padding: 8px 12px; border-radius: 8px;
-  border: 1.5px solid var(--border); font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.82rem; outline: none; transition: border-color 0.15s;
-}
-.price-input:focus { border-color: var(--green); }
-.btn-send-offer {
-  background: var(--green); color: #fff; border: none;
-  padding: 8px 16px; border-radius: 8px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.78rem; font-weight: 700; cursor: pointer;
-  transition: background 0.15s; white-space: nowrap;
-}
-.btn-send-offer:hover { background: var(--green-mid); }
-
-.offer-thread { margin-top: 12px; }
-.offer-msg {
-  display: flex; flex-direction: column;
-  margin-bottom: 8px;
-}
-.offer-msg .bubble {
-  padding: 7px 12px; border-radius: 8px;
-  font-size: 0.78rem; line-height: 1.4;
-  max-width: 85%;
-}
-.offer-msg.buyer { align-items: flex-end; }
-.offer-msg.buyer .bubble { background: var(--green-light); color: var(--green); border-radius: 8px 8px 2px 8px; }
-.offer-msg.farmer { align-items: flex-start; }
-.offer-msg.farmer .bubble { background: #f3f4f6; color: var(--text-2); border-radius: 8px 8px 8px 2px; }
-.offer-time { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
-
-/* ── LOGISTICS TRACKER ── */
-.logistics-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 20px; margin-bottom: 14px;
-}
-.logi-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
-}
-.logi-header h4 { font-size: 0.9rem; font-weight: 700; }
-.tracking-steps {
-  display: flex; align-items: center;
-  gap: 0; position: relative;
-  margin-bottom: 8px;
-}
-.step {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  position: relative; z-index: 1;
-}
-.step-circle {
-  width: 30px; height: 30px;
-  border-radius: 50%; border: 2.5px solid var(--border);
-  background: var(--card);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
-  transition: all 0.3s;
-}
-.step.done .step-circle { background: var(--green); border-color: var(--green); color: #fff; }
-.step.current .step-circle { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 4px #dbeafe; }
-.step-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 6px; text-align: center; }
-.step.done .step-label, .step.current .step-label { color: var(--text-2); font-weight: 600; }
-.step-line {
-  flex: 1; height: 2.5px; background: var(--border);
-  margin: 0 -1px; margin-bottom: 22px; z-index: 0;
-  transition: background 0.3s;
-}
-.step-line.done { background: var(--green); }
-
-.logi-meta {
-  display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap;
-}
-.logi-meta-item { font-size: 0.78rem; color: var(--text-muted); }
-.logi-meta-item strong { color: var(--text); display: block; font-size: 0.82rem; }
-
-/* ── PAYMENT SECTION ── */
-.pay-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-  margin-bottom: 28px;
-}
-.pay-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 18px;
-}
-.pay-card h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; }
-.pay-row {
-  display: flex; justify-content: space-between;
-  font-size: 0.8rem; padding: 8px 0;
-  border-bottom: 1px solid #f3f4f6;
-}
-.pay-row:last-of-type { border-bottom: none; }
-.pay-row .label { color: var(--text-muted); }
-.pay-row .val { font-weight: 600; }
-.pay-row .val.green { color: var(--green); }
-.pay-row .val.red { color: var(--red); }
-.pay-total {
-  display: flex; justify-content: space-between;
-  font-weight: 700; font-size: 0.95rem;
-  margin-top: 10px; padding-top: 10px;
-  border-top: 2px solid var(--border);
-}
-.btn-pay-now {
-  width: 100%; margin-top: 16px;
-  background: linear-gradient(135deg, #1c6b3a, #2d8f54);
-  color: #fff; border: none;
-  padding: 12px; border-radius: 10px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.88rem; font-weight: 700;
-  cursor: pointer; transition: opacity 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-pay-now:hover { opacity: 0.9; }
-
-.payment-methods { display: flex; flex-direction: column; gap: 10px; }
-.pay-method {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; border-radius: 10px;
-  border: 1.5px solid var(--border); cursor: pointer;
-  transition: border-color 0.15s;
-}
-.pay-method:hover, .pay-method.selected { border-color: var(--green); background: var(--green-light); }
-.pay-method-icon { font-size: 1.3rem; }
-.pay-method-name { font-size: 0.82rem; font-weight: 600; }
-.pay-method-desc { font-size: 0.7rem; color: var(--text-muted); }
-.pay-radio {
-  margin-left: auto; width: 16px; height: 16px;
-  border-radius: 50%; border: 2px solid var(--border);
-  transition: all 0.15s;
-}
-.pay-method.selected .pay-radio {
-  background: var(--green); border-color: var(--green);
-  box-shadow: inset 0 0 0 3px #fff;
-}
-
-/* ── MODAL OVERLAY ── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 200; opacity: 0; pointer-events: none;
-  transition: opacity 0.2s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--card); border-radius: 14px;
-  padding: 28px; width: 480px; max-width: 95vw;
-  transform: translateY(20px);
-  transition: transform 0.2s;
-}
-.modal-overlay.open .modal { transform: translateY(0); }
-.modal h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 18px; }
-.form-group { margin-bottom: 14px; }
-.form-label { font-size: 0.78rem; font-weight: 600; color: var(--text-2); margin-bottom: 5px; display: block; }
-.form-input, .form-select, .form-textarea {
-  width: 100%; padding: 9px 12px;
-  border: 1.5px solid var(--border); border-radius: 8px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.83rem; outline: none; color: var(--text);
-  transition: border-color 0.15s;
-}
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green); }
-.form-textarea { resize: vertical; min-height: 80px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: #111827; color: #fff;
-  padding: 12px 20px; border-radius: 10px;
-  font-size: 0.82rem; font-weight: 500;
-  display: flex; align-items: center; gap: 8px;
-  z-index: 300; transform: translateY(80px);
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-}
-.toast.show { transform: translateY(0); }
-.toast .t-icon { font-size: 1rem; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .neg-grid, .pay-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .sidebar { display: none; }
-  .main { margin-left: 0; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-}
-
-/* Fade-in animation */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.page.active { animation: fadeUp 0.25s ease; }
+  :root { --sidebar-w: 260px; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    /* Minimalist faint background */
+    background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=80') center/cover fixed;
+  }
+  .bg-overlay { background-color: rgba(248, 249, 250, 0.94); min-height: 100vh; display: flex; }
+  .font-serif { font-family: 'Playfair Display', serif; }
+  
+  /* Sidebar */
+  .sidebar { width: var(--sidebar-w); position: fixed; inset: 0 auto 0 0; z-index: 1040; }
+  .nav-link { color: #6c757d; font-weight: 500; border-left: 3px solid transparent; transition: 0.2s; }
+  .nav-link:hover { color: #198754; background: #f8f9fa; }
+  .nav-link.active { color: #198754 !important; background: rgba(25,135,84,0.1); border-left-color: #198754; font-weight: 600; }
+  
+  /* Main Content */
+  .main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+  .topbar { position: sticky; top: 0; z-index: 1030; backdrop-filter: blur(10px); background: rgba(255,255,255,0.9) !important; }
+  
+  /* Pages & Animations */
+  .page { display: none; animation: fadeIn 0.4s ease; padding: 2rem; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  /* Utilities */
+  .icon-box { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 1.25rem; }
+  .crop-img-box { height: 120px; font-size: 3rem; display: flex; align-items: center; justify-content: center; background: #f8f9fa; position: relative; }
+  .bubble { background: #f8f9fa; padding: 10px 16px; border-radius: 16px 16px 16px 4px; font-size: 0.85rem; max-width: 85%; }
+  .bubble.me { background: rgba(25,135,84,0.1); color: #198754; border-radius: 16px 16px 4px 16px; border: 1px solid rgba(25,135,84,0.2); }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 10px; }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <h1>Farm<span>Link</span></h1>
-    <p>Buyer Dashboard</p>
-  </div>
-  <div class="sidebar-section-label">Main</div>
-  <a class="nav-item active" onclick="showPage('dashboard',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-    Dashboard
-  </a>
-  <a class="nav-item" onclick="showPage('browse',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10H3M21 6H3M21 14H3M21 18H3"/></svg>
-    Browse Crops
-  </a>
-  <a class="nav-item" onclick="showPage('negotiate',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3 3v-3z"/></svg>
-    Negotiations
-    <span class="nav-badge">3</span>
-  </a>
-  <div class="sidebar-section-label">Orders</div>
-  <a class="nav-item" onclick="showPage('orders',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
-    My Orders
-  </a>
-  <a class="nav-item" onclick="showPage('logistics',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="m16 8 5 2v5h-5V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-    Logistics
-  </a>
-  <a class="nav-item" onclick="showPage('payment',this)">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-    Payments
-  </a>
-  <div class="sidebar-bottom">
-    <div class="buyer-profile">
-      <div class="buyer-avatar">SR</div>
-      <div class="buyer-info">
-        <strong>Sharma Restaurants</strong>
-        <span>Verified Buyer</span>
+<div class="bg-overlay">
+  <aside class="sidebar bg-white border-end shadow-sm h-100 d-flex flex-column">
+    <div class="p-4 border-bottom">
+      <h4 class="font-serif fw-bold mb-0">Farm<span class="text-success">Link</span></h4>
+      <small class="text-muted text-uppercase fw-bold" style="font-size:0.65rem; letter-spacing:1px;">Buyer Dashboard</small>
+    </div>
+    <div class="p-3 overflow-auto">
+      <small class="text-muted text-uppercase fw-bold px-3 mb-2 d-block" style="font-size:0.65rem">Main Menu</small>
+      <nav class="nav flex-column gap-1 mb-4">
+        <a class="nav-link active rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('dashboard',this)"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('browse',this)"><i class="bi bi-shop"></i> Browse Crops</a>
+        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('negotiate',this)">
+          <i class="bi bi-chat-left-text"></i> Negotiations <span class="badge bg-warning text-dark ms-auto rounded-pill">3</span>
+        </a>
+      </nav>
+      <small class="text-muted text-uppercase fw-bold px-3 mb-2 d-block" style="font-size:0.65rem">Orders & Logistics</small>
+      <nav class="nav flex-column gap-1">
+        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('orders',this)"><i class="bi bi-receipt"></i> My Orders</a>
+        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('logistics',this)"><i class="bi bi-truck"></i> Logistics</a>
+        <a class="nav-link rounded-end-pill px-3 py-2 d-flex align-items-center gap-2" onclick="showPage('payment',this)"><i class="bi bi-wallet2"></i> Payments</a>
+      </nav>
+    </div>
+    <div class="mt-auto p-4 border-top">
+      <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width:40px;height:40px;">SR</div>
+        <div class="lh-sm">
+          <strong class="d-block fs-6">Sharma Rest.</strong>
+          <small class="text-success fw-semibold" style="font-size:0.7rem;"><i class="bi bi-patch-check-fill"></i> Verified Buyer</small>
+        </div>
       </div>
     </div>
-  </div>
-</aside>
+  </aside>
 
-<!-- MAIN -->
-<div class="main">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <h2 id="pageTitle">Dashboard</h2>
-    <div class="topbar-search">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Search crops, farmers…">
-    </div>
-    <div class="notif-btn">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span class="notif-dot"></span>
-    </div>
-    <button class="btn-sm btn-primary" onclick="openModal()">+ New Order</button>
-  </div>
+  <div class="main-content">
+    <header class="topbar border-bottom px-4 py-3 d-flex align-items-center justify-content-between shadow-sm">
+      <h4 class="font-serif fw-bold mb-0" id="pageTitle">Dashboard</h4>
+      <div class="d-flex align-items-center gap-3">
+        <div class="input-group bg-light rounded-pill px-3 py-1 border d-none d-md-flex" style="width: 250px;">
+          <i class="bi bi-search text-muted mt-1"></i>
+          <input type="text" class="form-control border-0 bg-transparent shadow-none" placeholder="Search...">
+        </div>
+        <button class="btn btn-light rounded-circle border shadow-sm position-relative"><i class="bi bi-bell"></i><span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span></button>
+        <button class="btn btn-success rounded-pill fw-semibold shadow-sm px-4" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-plus-lg"></i> New Order</button>
+      </div>
+    </header>
 
-  <!-- ─── DASHBOARD PAGE ─── -->
-  <div class="page active" id="page-dashboard">
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-icon green">🌾</div>
-        <div>
-          <div class="stat-val">₹2.4L</div>
-          <div class="stat-label">Total Spent (This Month)</div>
-          <div class="stat-change up">↑ 12% from last month</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon amber">📦</div>
-        <div>
-          <div class="stat-val">14</div>
-          <div class="stat-label">Active Orders</div>
-          <div class="stat-change up">↑ 3 new today</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon blue">🤝</div>
-        <div>
-          <div class="stat-val">3</div>
-          <div class="stat-label">Open Negotiations</div>
-          <div class="stat-change">Awaiting farmer response</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon red">⏳</div>
-        <div>
-          <div class="stat-val">₹38,200</div>
-          <div class="stat-label">Pending Payments</div>
-          <div class="stat-change down">Due in 3 days</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="sec-hdr">
-      <h3>Recent Orders</h3>
-      <button class="btn-sm btn-outline" onclick="showPage('orders',null)">View All</button>
-    </div>
-    <div class="table-wrap" style="margin-bottom:28px;">
-      <table>
-        <thead><tr>
-          <th>Order ID</th><th>Crop</th><th>Farmer</th><th>Qty</th><th>Amount</th><th>Status</th><th>Action</th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td>#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel, Nashik</td><td>200 kg</td><td>₹5,600</td>
-            <td><span class="status-pill transit">🚚 In Transit</span></td>
-            <td><div class="order-actions"><button class="act-btn act-track" onclick="showPage('logistics',null)">Track</button></div></td>
-          </tr>
-          <tr>
-            <td>#FL-2398</td><td>🌾 Wheat</td><td>Suresh Kumar, Ludhiana</td><td>500 kg</td><td>₹11,000</td>
-            <td><span class="status-pill pending">⏳ Pending</span></td>
-            <td><div class="order-actions"><button class="act-btn act-pay" onclick="showPage('payment',null)">Pay Now</button></div></td>
-          </tr>
-          <tr>
-            <td>#FL-2391</td><td>🥔 Potato</td><td>Anita Devi, Agra</td><td>300 kg</td><td>₹7,200</td>
-            <td><span class="status-pill delivered">✓ Delivered</span></td>
-            <td><div class="order-actions"><button class="act-btn act-track">Invoice</button></div></td>
-          </tr>
-          <tr>
-            <td>#FL-2389</td><td>🍚 Basmati Rice</td><td>Gurpreet Singh, Amritsar</td><td>100 kg</td><td>₹9,200</td>
-            <td><span class="status-pill negotiate">💬 Negotiating</span></td>
-            <td><div class="order-actions"><button class="act-btn act-neg" onclick="showPage('negotiate',null)">Respond</button></div></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Featured Crops -->
-    <div class="sec-hdr">
-      <h3>Available Now — Best Prices</h3>
-      <button class="btn-sm btn-outline" onclick="showPage('browse',null)">Browse All</button>
-    </div>
-    <div class="crop-grid" id="featuredCrops"></div>
-  </div>
-
-  <!-- ─── BROWSE PAGE ─── -->
-  <div class="page" id="page-browse">
-    <div class="filter-bar">
-      <div class="filter-chip active">All Crops</div>
-      <div class="filter-chip">🍅 Vegetables</div>
-      <div class="filter-chip">🌾 Grains</div>
-      <div class="filter-chip">🍎 Fruits</div>
-      <div class="filter-chip">🌶️ Spices</div>
-      <div class="filter-chip">🥜 Pulses</div>
-      <select class="filter-select">
-        <option>Sort: Best Price</option>
-        <option>Sort: Newest</option>
-        <option>Sort: Highest Availability</option>
-        <option>Sort: Nearest Farmer</option>
-      </select>
-    </div>
-    <div class="crop-grid" id="browseCrops"></div>
-  </div>
-
-  <!-- ─── NEGOTIATIONS PAGE ─── -->
-  <div class="page" id="page-negotiate">
-    <div style="margin-bottom:18px;">
-      <p style="font-size:0.85rem;color:var(--text-muted);">Negotiate prices directly with farmers. Send counter-offers and reach a fair deal.</p>
-    </div>
-    <div class="neg-grid">
-      <!-- Card 1 -->
-      <div class="neg-card">
-        <div class="neg-header">
-          <div>
-            <h4>🌾 Wheat — 500 kg</h4>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Suresh Kumar, Ludhiana • Punjab</div>
-          </div>
-          <span class="neg-status counter">Counter Offer</span>
-        </div>
-        <div class="neg-row"><span>Listed Price:</span><strong>₹22/kg → ₹11,000</strong></div>
-        <div class="neg-row"><span>Your Offer:</span><strong>₹19/kg → ₹9,500</strong></div>
-        <div class="neg-row"><span>Farmer Counter:</span><strong style="color:var(--amber)">₹21/kg → ₹10,500</strong></div>
-        <div class="offer-thread">
-          <div class="offer-msg buyer"><div class="bubble">Can you do ₹19/kg for 500kg order?</div><span class="offer-time">You · 2h ago</span></div>
-          <div class="offer-msg farmer"><div class="bubble">Best I can do is ₹21/kg. Quality is Grade A certified.</div><span class="offer-time">Suresh Kumar · 1h ago</span></div>
-        </div>
-        <div class="price-input-row">
-          <input class="price-input" placeholder="Your counter offer (e.g. ₹20/kg)" type="text">
-          <button class="btn-send-offer" onclick="sendOffer(this)">Send Offer</button>
-        </div>
-      </div>
-      <!-- Card 2 -->
-      <div class="neg-card">
-        <div class="neg-header">
-          <div>
-            <h4>🍅 Tomato — 200 kg</h4>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Ramesh Patel, Nashik • Maharashtra</div>
-          </div>
-          <span class="neg-status open">Awaiting Reply</span>
-        </div>
-        <div class="neg-row"><span>Listed Price:</span><strong>₹30/kg → ₹6,000</strong></div>
-        <div class="neg-row"><span>Your Offer:</span><strong>₹26/kg → ₹5,200</strong></div>
-        <div class="neg-row"><span>Potential Saving:</span><strong style="color:var(--green)">₹800 (13%)</strong></div>
-        <div class="offer-thread">
-          <div class="offer-msg buyer"><div class="bubble">We buy every week. Can you offer ₹26/kg for regular orders?</div><span class="offer-time">You · 3h ago</span></div>
-          <div class="offer-msg farmer"><div class="bubble">Let me check with my cooperative and get back to you.</div><span class="offer-time">Ramesh Patel · 2h ago</span></div>
-        </div>
-        <div class="price-input-row">
-          <input class="price-input" placeholder="Revise your offer…" type="text">
-          <button class="btn-send-offer" onclick="sendOffer(this)">Send Offer</button>
-        </div>
-      </div>
-      <!-- Card 3 -->
-      <div class="neg-card">
-        <div class="neg-header">
-          <div>
-            <h4>🥔 Potato — 300 kg</h4>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Anita Devi, Agra • Uttar Pradesh</div>
-          </div>
-          <span class="neg-status open">Open</span>
-        </div>
-        <div class="neg-row"><span>Listed Price:</span><strong>₹25/kg → ₹7,500</strong></div>
-        <div class="neg-row"><span>Market Rate:</span><strong>₹22–₹26/kg</strong></div>
-        <div class="neg-row"><span>Min. Order:</span><strong>100 kg</strong></div>
-        <div class="offer-thread">
-          <div class="offer-msg farmer"><div class="bubble">Fresh harvest. Delivery available within 48 hours to Delhi/NCR.</div><span class="offer-time">Anita Devi · Today</span></div>
-        </div>
-        <div class="price-input-row">
-          <input class="price-input" placeholder="Make your first offer…" type="text">
-          <button class="btn-send-offer" onclick="sendOffer(this)">Send Offer</button>
-        </div>
-      </div>
-      <!-- Card 4 -->
-      <div class="neg-card" style="background:var(--green-light);border-color:#b3d9c2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;min-height:200px;">
-        <div style="font-size:2.5rem;">🤝</div>
-        <div style="text-align:center;">
-          <strong style="font-size:0.9rem;">Start a New Negotiation</strong>
-          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Browse crops and send price offers<br>directly to farmers.</p>
-        </div>
-        <button class="btn-sm btn-primary" onclick="showPage('browse',null)">Browse Crops</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ─── ORDERS PAGE ─── -->
-  <div class="page" id="page-orders">
-    <div class="filter-bar" style="margin-bottom:18px;">
-      <div class="filter-chip active">All Orders</div>
-      <div class="filter-chip">In Transit</div>
-      <div class="filter-chip">Delivered</div>
-      <div class="filter-chip">Pending</div>
-      <div class="filter-chip">Negotiating</div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>Order ID</th><th>Crop & Qty</th><th>Farmer & Location</th><th>Order Date</th><th>Est. Delivery</th><th>Amount</th><th>Status</th><th>Actions</th>
-        </tr></thead>
-        <tbody>
-          <tr><td>#FL-2401</td><td>🍅 Tomato · 200kg</td><td>Ramesh Patel, Nashik</td><td>22 Jan 2025</td><td>25 Jan 2025</td><td>₹5,600</td><td><span class="status-pill transit">🚚 In Transit</span></td><td><div class="order-actions"><button class="act-btn act-track" onclick="showPage('logistics',null)">Track</button><button class="act-btn act-pay" onclick="showPage('payment',null)">Pay</button></div></td></tr>
-          <tr><td>#FL-2398</td><td>🌾 Wheat · 500kg</td><td>Suresh Kumar, Ludhiana</td><td>21 Jan 2025</td><td>24 Jan 2025</td><td>₹11,000</td><td><span class="status-pill pending">⏳ Pending</span></td><td><div class="order-actions"><button class="act-btn act-pay" onclick="showPage('payment',null)">Pay Now</button></div></td></tr>
-          <tr><td>#FL-2391</td><td>🥔 Potato · 300kg</td><td>Anita Devi, Agra</td><td>18 Jan 2025</td><td>20 Jan 2025</td><td>₹7,200</td><td><span class="status-pill delivered">✓ Delivered</span></td><td><div class="order-actions"><button class="act-btn act-track">Invoice</button><button class="act-btn" style="background:#fef3c7;color:#b45309;">Reorder</button></div></td></tr>
-          <tr><td>#FL-2389</td><td>🍚 Basmati Rice · 100kg</td><td>Gurpreet Singh, Amritsar</td><td>17 Jan 2025</td><td>TBD</td><td>₹9,200</td><td><span class="status-pill negotiate">💬 Negotiating</span></td><td><div class="order-actions"><button class="act-btn act-neg" onclick="showPage('negotiate',null)">Respond</button></div></td></tr>
-          <tr><td>#FL-2381</td><td>🧅 Onion · 150kg</td><td>Devika Sharma, Nasik</td><td>14 Jan 2025</td><td>16 Jan 2025</td><td>₹3,300</td><td><span class="status-pill delivered">✓ Delivered</span></td><td><div class="order-actions"><button class="act-btn act-track">Invoice</button><button class="act-btn" style="background:#fef3c7;color:#b45309;">Reorder</button></div></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ─── LOGISTICS PAGE ─── -->
-  <div class="page" id="page-logistics">
-    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;">Track your crop shipments from farm to your door in real time.</p>
-
-    <div class="logistics-card">
-      <div class="logi-header">
-        <div>
-          <h4>#FL-2401 — 🍅 Tomato (200 kg)</h4>
-          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Ramesh Patel, Nashik → Sharma Restaurants, Mumbai</div>
-        </div>
-        <span class="status-pill transit">🚚 In Transit</span>
-      </div>
-      <div class="tracking-steps">
-        <div class="step done">
-          <div class="step-circle">✓</div>
-          <div class="step-label">Order Placed</div>
-        </div>
-        <div class="step-line done"></div>
-        <div class="step done">
-          <div class="step-circle">✓</div>
-          <div class="step-label">Farmer Confirmed</div>
-        </div>
-        <div class="step-line done"></div>
-        <div class="step done">
-          <div class="step-circle">✓</div>
-          <div class="step-label">Quality Check</div>
-        </div>
-        <div class="step-line done"></div>
-        <div class="step current">
-          <div class="step-circle">→</div>
-          <div class="step-label">In Transit</div>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-circle">5</div>
-          <div class="step-label">Delivered</div>
-        </div>
-      </div>
-      <div class="logi-meta">
-        <div class="logi-meta-item"><strong>Transporter</strong>AgriFreight Co.</div>
-        <div class="logi-meta-item"><strong>Vehicle No.</strong>MH-04-AB-1234</div>
-        <div class="logi-meta-item"><strong>Est. Delivery</strong>25 Jan 2025, 2–5 PM</div>
-        <div class="logi-meta-item"><strong>Distance Left</strong>~110 km</div>
-        <div class="logi-meta-item"><strong>Temperature</strong>8–12°C (Cold Chain ✓)</div>
-      </div>
-    </div>
-
-    <div class="logistics-card">
-      <div class="logi-header">
-        <div>
-          <h4>#FL-2398 — 🌾 Wheat (500 kg)</h4>
-          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Suresh Kumar, Ludhiana → Sharma Restaurants, Mumbai</div>
-        </div>
-        <span class="status-pill pending">⏳ Awaiting Dispatch</span>
-      </div>
-      <div class="tracking-steps">
-        <div class="step done"><div class="step-circle">✓</div><div class="step-label">Order Placed</div></div>
-        <div class="step-line done"></div>
-        <div class="step current"><div class="step-circle">→</div><div class="step-label">Farmer Confirmed</div></div>
-        <div class="step-line"></div>
-        <div class="step"><div class="step-circle">3</div><div class="step-label">Quality Check</div></div>
-        <div class="step-line"></div>
-        <div class="step"><div class="step-circle">4</div><div class="step-label">In Transit</div></div>
-        <div class="step-line"></div>
-        <div class="step"><div class="step-circle">5</div><div class="step-label">Delivered</div></div>
-      </div>
-      <div class="logi-meta">
-        <div class="logi-meta-item"><strong>Est. Dispatch</strong>24 Jan 2025</div>
-        <div class="logi-meta-item"><strong>Est. Delivery</strong>26–27 Jan 2025</div>
-        <div class="logi-meta-item"><strong>Payment Status</strong><span style="color:var(--red)">Pending — Required before dispatch</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ─── PAYMENTS PAGE ─── -->
-  <div class="page" id="page-payment">
-    <div class="pay-grid">
-      <div class="pay-card">
-        <h4>💳 Payment Summary — #FL-2398</h4>
-        <div class="pay-row"><span class="label">Crop</span><span class="val">Wheat (500 kg)</span></div>
-        <div class="pay-row"><span class="label">Farmer</span><span class="val">Suresh Kumar</span></div>
-        <div class="pay-row"><span class="label">Agreed Price</span><span class="val">₹21/kg</span></div>
-        <div class="pay-row"><span class="label">Subtotal</span><span class="val">₹10,500</span></div>
-        <div class="pay-row"><span class="label">Logistics</span><span class="val">₹850</span></div>
-        <div class="pay-row"><span class="label">Platform Fee (1%)</span><span class="val">₹105</span></div>
-        <div class="pay-row"><span class="label">Discount Applied</span><span class="val green">−₹255</span></div>
-        <div class="pay-total">
-          <span>Total Payable</span>
-          <span style="color:var(--green)">₹11,200</span>
-        </div>
-        <button class="btn-pay-now" onclick="payNow()">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-          Pay ₹11,200 Securely
-        </button>
-      </div>
-      <div class="pay-card">
-        <h4>🔒 Choose Payment Method</h4>
-        <div class="payment-methods">
-          <div class="pay-method selected" onclick="selectPay(this)">
-            <span class="pay-method-icon">🏦</span>
-            <div><div class="pay-method-name">Net Banking / NEFT</div><div class="pay-method-desc">Direct bank transfer</div></div>
-            <div class="pay-radio"></div>
-          </div>
-          <div class="pay-method" onclick="selectPay(this)">
-            <span class="pay-method-icon">📱</span>
-            <div><div class="pay-method-name">UPI</div><div class="pay-method-desc">GPay, PhonePe, Paytm</div></div>
-            <div class="pay-radio"></div>
-          </div>
-          <div class="pay-method" onclick="selectPay(this)">
-            <span class="pay-method-icon">💳</span>
-            <div><div class="pay-method-name">Debit / Credit Card</div><div class="pay-method-desc">Visa, Mastercard, RuPay</div></div>
-            <div class="pay-radio"></div>
-          </div>
-          <div class="pay-method" onclick="selectPay(this)">
-            <span class="pay-method-icon">🔄</span>
-            <div><div class="pay-method-name">Escrow (Recommended)</div><div class="pay-method-desc">Held until delivery confirmed</div></div>
-            <div class="pay-radio"></div>
+    <div class="page active" id="page-dashboard">
+      <div class="row g-4 mb-5">
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+              <div class="icon-box bg-success bg-opacity-10 text-success">🌾</div>
+              <div><h4 class="font-serif fw-bold mb-0">₹2.4L</h4><small class="text-muted">Spent (Month)</small><div class="text-success small fw-bold mt-1"><i class="bi bi-arrow-up"></i> 12%</div></div>
+            </div>
           </div>
         </div>
-        <div style="margin-top:14px;padding:10px 14px;background:var(--blue-light);border-radius:8px;font-size:0.75rem;color:var(--blue);">
-          🔐 All transactions are SSL encrypted & protected by FarmLink Trust Shield.
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+              <div class="icon-box bg-warning bg-opacity-10 text-warning">📦</div>
+              <div><h4 class="font-serif fw-bold mb-0">14</h4><small class="text-muted">Active Orders</small><div class="text-success small fw-bold mt-1"><i class="bi bi-arrow-up"></i> 3 today</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+              <div class="icon-box bg-info bg-opacity-10 text-info">🤝</div>
+              <div><h4 class="font-serif fw-bold mb-0">3</h4><small class="text-muted">Negotiations</small><div class="text-muted small mt-1">Awaiting reply</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+              <div class="icon-box bg-danger bg-opacity-10 text-danger">⏳</div>
+              <div><h4 class="font-serif fw-bold mb-0">₹38k</h4><small class="text-muted">Pending Pay</small><div class="text-danger small fw-bold mt-1">Due 3 days</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-end mb-3">
+        <h5 class="font-serif fw-bold mb-0">Recent Orders</h5>
+        <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="showPage('orders',null)">View All</button>
+      </div>
+      <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-uppercase text-muted" style="font-size:0.75rem;">
+              <tr><th class="ps-4">Order ID</th><th>Crop</th><th>Farmer</th><th>Qty</th><th>Amount</th><th>Status</th><th class="pe-4">Action</th></tr>
+            </thead>
+            <tbody class="border-top-0">
+              <tr><td class="ps-4 fw-semibold">#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel</td><td>200 kg</td><td>₹5,600</td><td><span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-2 py-1"><i class="bi bi-truck"></i> In Transit</span></td><td class="pe-4"><button class="btn btn-sm btn-light border text-primary fw-semibold rounded-pill px-3" onclick="showPage('logistics',null)">Track</button></td></tr>
+              <tr><td class="ps-4 fw-semibold">#FL-2398</td><td>🌾 Wheat</td><td>Suresh Kumar</td><td>500 kg</td><td>₹11,000</td><td><span class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill px-2 py-1"><i class="bi bi-hourglass-split"></i> Pending</span></td><td class="pe-4"><button class="btn btn-sm btn-success fw-semibold rounded-pill px-3" onclick="showPage('payment',null)">Pay</button></td></tr>
+              <tr><td class="ps-4 fw-semibold">#FL-2391</td><td>🥔 Potato</td><td>Anita Devi</td><td>300 kg</td><td>₹7,200</td><td><span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-2 py-1"><i class="bi bi-check2"></i> Delivered</span></td><td class="pe-4"><button class="btn btn-sm btn-light border text-muted fw-semibold rounded-pill px-3">Invoice</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-end mb-3">
+        <h5 class="font-serif fw-bold mb-0">Available Now</h5>
+        <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="showPage('browse',null)">Browse All</button>
+      </div>
+      <div class="row g-4" id="featuredCrops"></div>
+    </div>
+
+    <div class="page" id="page-browse">
+      <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
+        <button class="btn btn-success rounded-pill px-4 shadow-sm">All Crops</button>
+        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🍅 Vegetables</button>
+        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🌾 Grains</button>
+        <button class="btn btn-white bg-white border shadow-sm rounded-pill text-muted px-4">🍎 Fruits</button>
+        <select class="form-select rounded-pill shadow-sm border-0 w-auto ms-auto bg-white"><option>Sort: Best Price</option><option>Newest</option></select>
+      </div>
+      <div class="row g-4" id="browseCrops"></div>
+    </div>
+
+    <div class="page" id="page-negotiate">
+      <p class="text-muted mb-4">Negotiate prices directly with farmers to reach a fair deal.</p>
+      <div class="row g-4">
+        <div class="col-xl-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+              <div><h5 class="font-serif fw-bold mb-1">🌾 Wheat — 500 kg</h5><small class="text-muted"><i class="bi bi-person"></i> Suresh Kumar, Ludhiana</small></div>
+              <span class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill px-3 py-2">Counter Offer</span>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-1"><span>Listed: <strong>₹22/kg</strong></span><span>You: <strong>₹19/kg</strong></span><span>Farmer: <strong class="text-warning">₹21/kg</strong></span></div>
+            <div class="bg-light rounded-4 p-3 mt-3 mb-3">
+              <div class="d-flex flex-column align-items-end mb-2"><div class="bubble me shadow-sm">Can you do ₹19/kg?</div><small class="text-muted mt-1" style="font-size:0.65rem">You · 2h ago</small></div>
+              <div class="d-flex flex-column align-items-start"><div class="bubble shadow-sm border">Best is ₹21/kg. Grade A.</div><small class="text-muted mt-1" style="font-size:0.65rem">Farmer · 1h ago</small></div>
+            </div>
+            <div class="input-group"><input type="text" class="form-control rounded-start-pill border-end-0 bg-light" placeholder="Offer (e.g. ₹20)"><button class="btn btn-success rounded-end-pill px-4" onclick="showToast()">Send</button></div>
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+              <div><h5 class="font-serif fw-bold mb-1">🍅 Tomato — 200 kg</h5><small class="text-muted"><i class="bi bi-person"></i> Ramesh Patel, Nashik</small></div>
+              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-pill px-3 py-2">Awaiting Reply</span>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mb-1"><span>Listed: <strong>₹30/kg</strong></span><span>You: <strong>₹26/kg</strong></span><span>Saving: <strong class="text-success">₹800</strong></span></div>
+            <div class="bg-light rounded-4 p-3 mt-3 mb-3">
+              <div class="d-flex flex-column align-items-end mb-2"><div class="bubble me shadow-sm">Can you offer ₹26/kg for regular orders?</div><small class="text-muted mt-1" style="font-size:0.65rem">You · 3h ago</small></div>
+              <div class="d-flex flex-column align-items-start"><div class="bubble shadow-sm border">Let me check stock.</div><small class="text-muted mt-1" style="font-size:0.65rem">Farmer · 2h ago</small></div>
+            </div>
+            <div class="input-group"><input type="text" class="form-control rounded-start-pill border-end-0 bg-light" placeholder="Revise offer"><button class="btn btn-success rounded-end-pill px-4" onclick="showToast()">Send</button></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Payment History -->
-    <div class="sec-hdr"><h3>Payment History</h3></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Date</th><th>Order</th><th>Crop</th><th>Farmer</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>18 Jan</td><td>#FL-2391</td><td>🥔 Potato</td><td>Anita Devi</td><td>₹7,200</td><td>UPI</td><td><span class="status-pill delivered">✓ Paid</span></td></tr>
-          <tr><td>14 Jan</td><td>#FL-2381</td><td>🧅 Onion</td><td>Devika Sharma</td><td>₹3,300</td><td>Net Banking</td><td><span class="status-pill delivered">✓ Paid</span></td></tr>
-          <tr><td>22 Jan</td><td>#FL-2401</td><td>🍅 Tomato</td><td>Ramesh Patel</td><td>₹5,600</td><td>Escrow</td><td><span class="status-pill transit">Held in Escrow</span></td></tr>
-        </tbody>
-      </table>
+    <div class="page" id="page-orders"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-receipt fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Order History</h4><p class="text-muted">Your past and current orders will appear here.</p></div></div>
+    <div class="page" id="page-logistics"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-truck fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Logistics Tracking</h4><p class="text-muted">Live tracking map goes here.</p></div></div>
+    <div class="page" id="page-payment"><div class="card border-0 shadow-sm rounded-4 p-5 text-center"><i class="bi bi-wallet2 fs-1 text-muted mb-3 d-block"></i><h4 class="font-serif fw-bold">Payments</h4><p class="text-muted">Payment gateways and invoices.</p></div></div>
+  </div>
+</div>
+
+<div class="modal fade" id="orderModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header border-0 pb-0"><h5 class="font-serif fw-bold text-success">Place New Order</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="row g-3 mb-3">
+          <div class="col-6"><label class="form-label small text-muted fw-bold">Crop</label><select class="form-select rounded-pill bg-light border-0"><option>🍅 Tomato</option><option>🌾 Wheat</option></select></div>
+          <div class="col-6"><label class="form-label small text-muted fw-bold">Qty (kg)</label><input type="number" class="form-control rounded-pill bg-light border-0" placeholder="200"></div>
+        </div>
+        <div class="mb-4"><label class="form-label small text-muted fw-bold">Notes</label><textarea class="form-control rounded-4 bg-light border-0" rows="3" placeholder="Grade A only..."></textarea></div>
+        <button class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm" data-bs-dismiss="modal" onclick="showToast()">Place Order</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- NEW ORDER MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <h3>Place New Order</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Crop Type</label>
-        <select class="form-select">
-          <option>🍅 Tomato</option><option>🌾 Wheat</option><option>🥔 Potato</option>
-          <option>🍚 Basmati Rice</option><option>🧅 Onion</option><option>🌶️ Green Chilli</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Quantity (kg)</label>
-        <input class="form-input" type="number" placeholder="e.g. 200">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Preferred Farmer/Region</label>
-        <input class="form-input" placeholder="e.g. Nashik, Maharashtra">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Required By Date</label>
-        <input class="form-input" type="date">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Budget / Offer Price (₹ per kg)</label>
-      <input class="form-input" type="number" placeholder="Leave blank to accept listed price">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Special Requirements</label>
-      <textarea class="form-textarea" placeholder="Grade A only, organic, cold storage required, etc."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-sm btn-outline" onclick="closeModal()">Cancel</button>
-      <button class="btn-sm btn-primary" onclick="placeOrder()">Place Order</button>
+<div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 2000;">
+  <div id="liveToast" class="toast rounded-4 shadow-lg border-0" role="alert">
+    <div class="toast-body d-flex align-items-center gap-2 py-3 px-4 fw-semibold text-dark">
+      <i class="bi bi-check-circle-fill text-success fs-5"></i> Action completed successfully!
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="t-icon" id="toastIcon">✅</span>
-  <span id="toastMsg">Action completed!</span>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ── Navigation
+// Logic to switch pages
 function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page, .nav-link').forEach(e => e.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  const titles = { dashboard:'Dashboard', browse:'Browse Crops', negotiate:'Price Negotiations', orders:'My Orders', logistics:'Logistics Tracking', payment:'Payments' };
-  document.getElementById('pageTitle').textContent = titles[id] || id;
-  if (el) {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-  }
+  document.getElementById('pageTitle').textContent = {dashboard:'Dashboard',browse:'Browse Crops',negotiate:'Negotiations',orders:'My Orders',logistics:'Logistics Tracking',payment:'Payments'}[id];
+  if (el) el.classList.add('active');
 }
 
-// ── Crop data
+// Generate minimal cards using Bootstrap grid
 const crops = [
-  { name:"Tomato (Grade A)", origin:"Ramesh Patel · Nashik", price:28, orig:35, disc:20, emoji:"🍅", avail:"high", qty:"500 kg available" },
-  { name:"Wheat (Sharbati)", origin:"Suresh Kumar · Ludhiana", price:21, orig:null, disc:0, emoji:"🌾", avail:"high", qty:"2 ton available" },
-  { name:"Potato (Jyoti)", origin:"Anita Devi · Agra", price:22, orig:26, disc:15, emoji:"🥔", avail:"med", qty:"300 kg available" },
-  { name:"Basmati Rice", origin:"Gurpreet Singh · Amritsar", price:88, orig:100, disc:12, emoji:"🍚", avail:"high", qty:"1.5 ton available" },
-  { name:"Onion (Red)", origin:"Devika Sharma · Nashik", price:19, orig:null, disc:0, emoji:"🧅", avail:"low", qty:"150 kg available" },
-  { name:"Mango (Kesar)", origin:"Bharat Mistry · Junagadh", price:95, orig:120, disc:21, emoji:"🥭", avail:"med", qty:"80 kg available" },
-  { name:"Green Chilli", origin:"Ravi Reddy · Guntur", price:45, orig:55, disc:18, emoji:"🌶️", avail:"high", qty:"200 kg available" },
-  { name:"Toor Dal", origin:"Meena Joshi · Latur", price:112, orig:130, disc:14, emoji:"🫘", avail:"high", qty:"400 kg available" },
+  { n:"Tomato", o:"Ramesh Patel", p:28, em:"🍅", a:"high", q:"500kg" },
+  { n:"Wheat", o:"Suresh Kumar", p:21, em:"🌾", a:"high", q:"2 ton" },
+  { n:"Potato", o:"Anita Devi", p:22, em:"🥔", a:"med", q:"300kg" },
+  { n:"Rice", o:"Gurpreet Singh", p:88, em:"🍚", a:"high", q:"1.5 ton" }
 ];
-
-function buildCropCard(c) {
-  const availClass = {high:'avail-high',med:'avail-med',low:'avail-low'}[c.avail];
-  const availText  = {high:'High Stock',med:'Limited Stock',low:'Low Stock'}[c.avail];
-  return `
-    <div class="crop-card">
-      ${c.disc > 0 ? `<div class="disc-tag">${c.disc}% OFF</div>` : ''}
-      <div class="crop-img">
-        ${c.emoji}
-        <div class="crop-farmer-tag">👨‍🌾 ${c.origin}</div>
-      </div>
-      <div class="crop-body">
-        <div class="crop-name">${c.name}</div>
-        <div class="crop-avail"><span class="availability-dot ${availClass}"></span>${availText} · ${c.qty}</div>
-        <div class="crop-price-row" style="margin-top:10px;">
-          <div>
-            <div class="crop-price">₹${c.price}<span>/kg</span></div>
-            ${c.orig ? `<div class="crop-orig">₹${c.orig}/kg</div>` : ''}
-          </div>
-          <button class="btn-neg" onclick="showToast('💬','Negotiation request sent to farmer!')">Negotiate</button>
+const buildCard = c => `
+  <div class="col-sm-6 col-lg-3">
+    <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden text-decoration-none" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+      <div class="crop-img-box">${c.em}<span class="position-absolute bottom-0 start-0 m-2 badge bg-white text-dark shadow-sm border">👨‍🌾 ${c.o}</span></div>
+      <div class="card-body">
+        <h6 class="fw-bold mb-1">${c.n}</h6>
+        <div class="small text-muted mb-3"><i class="bi bi-circle-fill ${c.a==='high'?'text-success':'text-warning'}" style="font-size:0.5rem"></i> ${c.a==='high'?'High':'Limited'} Stock · ${c.q}</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="font-serif fs-5 fw-bold text-success">₹${c.p}<span class="fs-6 fw-normal text-muted font-sans">/kg</span></div>
+          <button class="btn btn-sm btn-light border text-success rounded-pill fw-semibold px-3" onclick="event.stopPropagation(); showToast();">Negotiate</button>
         </div>
       </div>
-    </div>`;
-}
+    </div>
+  </div>`;
+document.getElementById('featuredCrops').innerHTML = crops.map(buildCard).join('');
+document.getElementById('browseCrops').innerHTML = [...crops, ...crops].map(buildCard).join(''); // Doubled for browse page
 
-document.getElementById('featuredCrops').innerHTML = crops.slice(0,4).map(buildCropCard).join('');
-document.getElementById('browseCrops').innerHTML   = crops.map(buildCropCard).join('');
-
-// ── Filter chips
-document.querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    chip.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
-
-// ── Modal
-function openModal()  { document.getElementById('modal').classList.add('open'); }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-document.getElementById('modal').addEventListener('click', e => { if(e.target===document.getElementById('modal')) closeModal(); });
-
-function placeOrder() {
-  closeModal();
-  showToast('✅', 'Order placed! Waiting for farmer confirmation.');
-}
-
-// ── Payment
-function selectPay(el) {
-  el.closest('.payment-methods').querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function payNow() { showToast('💳','Payment of ₹11,200 initiated securely!'); }
-
-// ── Send offer
-function sendOffer(btn) {
-  const input = btn.previousElementSibling;
-  if (!input.value.trim()) { showToast('⚠️','Please enter your offer price first.'); return; }
-  showToast('💬', `Offer "${input.value}" sent to farmer!`);
-  input.value = '';
-}
-
-// ── Toast
-function showToast(icon, msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+// Trigger Bootstrap Toast
+function showToast() {
+  const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+  toast.show();
 }
 </script>
 </body>
